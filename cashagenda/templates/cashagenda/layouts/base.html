@@ -67,21 +67,21 @@
 </head>
 <body>
 
-    {% include 'includes/sidebar.html' %}
+    {% include 'cashagenda/includes/sidebar.html' %}
     
     <main class="content">
 
-      {% include 'includes/navigation.html' %}
+      {% include 'cashagenda/includes/navigation.html' %}
 
       {% block content %}{% endblock content %} 
 
-      {% include 'includes/settings-box.html' %}
+      {% include 'cashagenda/includes/settings-box.html' %}
 
-      {% include 'includes/footer.html' %}
+      {% include 'cashagenda/includes/footer.html' %}
 
     </main>
 
-  {% include 'includes/scripts.html' %}
+  {% include 'cashagenda/includes/scripts.html' %}
     
   <!-- Specific Page JS goes HERE  -->
   {% block javascripts %}{% endblock javascripts %}  

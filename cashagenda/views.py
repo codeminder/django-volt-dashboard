@@ -14,7 +14,7 @@ def index(request):
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
-def dasboard(request):
+def dashboard(request):
     context = {'segment': 'index'}
 
     html_template = loader.get_template('cashagenda/dashboard.html')
