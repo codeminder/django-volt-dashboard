@@ -31,3 +31,5 @@ apps/static/assets/.temp
 
 .idea/
 migrations
+
+media/
