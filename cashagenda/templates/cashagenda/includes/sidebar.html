@@ -44,18 +44,50 @@
               </li>
               {% for menu_element in sidebar_menu %}
               {% if menu_element.submenu_items %}
+              <li class="nav-item {% if menu_element.active %} active {% endif %}">
+                <span
+                  class="nav-link  collapsed  d-flex justify-content-between align-items-center"
+                  data-bs-toggle="collapse" data-bs-target="#submenu-components">
+                  <span>
+                    <span class="sidebar-icon">
+                      <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">{% menu_element.svg_content %}</svg>
+                    </span> 
+                    <span class="sidebar-text">{% menu_element.title %}</span>
+                  </span>
+                  <span class="link-arrow">
+                    <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                  </span>
+                </span>
+                <div class="multi-level collapse {% if 'components-' in segment %} show {% endif %}" role="list"
+                  id="submenu-components" aria-expanded="false">
+                  <ul class="flex-column nav">
+                    {% for submenuelement in menu_element.submenu_items %}
+                    <li class="nav-item {% if submenuelement.active %} active {% endif %}">
+                      <a class="nav-link" href="{% url submenuelement.url_name %}">
+                        <span class="sidebar-text">{% menu_element.title %}</span>
+                      </a>
+                    </li>
+                    {% endfor %}
+                    <li class="nav-item {% if 'components-notifications' in segment %} active {% endif %}">
+                      <a class="nav-link" href="#">
+                        <span class="sidebar-text">Acc Inventory</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
               {% else %}
               <li class="nav-item {% if menu_element.active %} active {% endif %}">
-                <a href="{% url menu_element. %}" class="nav-link">
+                <a href="{% url menu_element.url_name %}" class="nav-link">
                   <span class="sidebar-icon">
-                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
+                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">{% menu_element.svg_content %}</svg>
                   </span> 
-                  <span class="sidebar-text">Dashboard</span>
+                  <span class="sidebar-text">{% url menu_element.title %}</span>
                 </a>
               </li>
               {% endif %}
               {% endfor %}
-              <li class="nav-item {% if 'dashboard' in segment %} active {% endif %}">
+              {% comment %} {% comment %} <li class="nav-item {% if 'dashboard' in segment %} active {% endif %}">
                 <a href="{% url 'cashagenda_home' %}" class="nav-link">
                   <span class="sidebar-icon">
                     <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
@@ -116,7 +148,7 @@
                     </li>
                   </ul>
                 </div>
-              </li>
+              </li> {% endcomment %}
               <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
               <li class="nav-item">
                 <a href="{% url 'logout' %}" class="nav-link">
