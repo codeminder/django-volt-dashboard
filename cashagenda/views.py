@@ -17,46 +17,46 @@ def get_page_context(active_page):
         {
             "title": "Dashboard", 
             "url_name": "cashagenda_home", 
-            "active": active_page == 0, 
+            "active": active_page == "dashboard", 
             "submenu_items": None, 
             "svg_content": svg_paths["round_diagramm"]
             },
         {
             "title": "Journals", 
             "url_name": "cashagenda_journals", 
-            "active": active_page == 1, 
+            "active": active_page == "journals", 
             "submenu_items": None, 
             "svg_content": svg_paths["detailed_list"]
             },
         {
             "title": "Accounts", 
             "url_name": "cashagenda_accounts", 
-            "active": active_page == 2, 
+            "active": active_page == "accounts", 
             "submenu_items": None, 
             "svg_content": svg_paths["bank_card"]
             },
         {
             "title": "Budgets", 
             "url_name": "cashagenda_budgets", 
-            "active": active_page == 3, 
+            "active": active_page == "budgets", 
             "submenu_items": None, 
             "svg_content": svg_paths["box"]
             },
         {
             "title": "Proccessors", 
             "url_name": "cashagenda_budgets", 
-            "active": active_page == 4, 
+            "active": active_page == "proccessors", 
             "submenu_items": 
                 [
                     {
                         "title": "PB export", 
                         "url_name": "cashagenda_accounts", 
-                        "active": active_page == 7
+                        "active": active_page == "pb_export"
                         },
                     {
                         "title": "Acc Inventory", 
                         "url_name": "cashagenda_budgets", 
-                        "active": active_page == 8
+                        "active": active_page == "acc_inventory"
                         }                   
                     ], 
             "svg_content": svg_paths["gear"]
@@ -68,51 +68,33 @@ def get_page_context(active_page):
 # Create your views here.
 
 @login_required(login_url="/login/")
-def index(request):
-    
-    context = get_page_context(0)
-    context['segment'] =  'index'
-
-    html_template = loader.get_template('cashagenda/dashboard.html')
-    # return HttpResponse("Start page app")
-    return HttpResponse(html_template.render(context, request))
-
-@login_required(login_url="/login/")
 def dashboard(request):
     
-    context = get_page_context(0)
-    context['segment'] =  'index'
+    context = get_page_context("dashboard")
 
     html_template = loader.get_template('cashagenda/dashboard.html')
-    # return HttpResponse("Start page app")
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
 def accounts(request):
     
-    context = get_page_context(2)
-    context['segment'] =  'index'
+    context = get_page_context("accounts")
 
     html_template = loader.get_template('cashagenda/accounts.html')
-    # return HttpResponse("Start page app")
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
 def budgets(request):
     
-    context = get_page_context(3)
-    context['segment'] =  'index'
+    context = get_page_context("budgets")
 
     html_template = loader.get_template('cashagenda/budgets.html')
-    # return HttpResponse("Start page app")
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
 def journals(request):
     
-    context = get_page_context(1)
-    context['segment'] =  'index'
+    context = get_page_context("journals")
 
     html_template = loader.get_template('cashagenda/journals.html')
-    # return HttpResponse("Start page app")
     return HttpResponse(html_template.render(context, request))
