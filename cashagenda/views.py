@@ -62,6 +62,7 @@ def get_page_context(active_page):
             "svg_content": svg_paths["gear"]
             }
     ]
+    return {"sidebar_menu": menu}
 
 
 # Create your views here.
