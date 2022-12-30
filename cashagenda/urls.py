@@ -13,5 +13,6 @@ urlpatterns = [
     path('accounts/', views.accounts, name='cashagenda_accounts'),
     path('budgets/', views.budgets, name='cashagenda_budgets'),
     path('journals/', views.journals, name='cashagenda_journals'),
+    path('new_cost/', views.new_cost, name='cashagenda_new_cost'),
 
 ]
