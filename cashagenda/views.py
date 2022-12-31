@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from .forms import *
 
 svg_paths = {
     "round_diagramm" : r'<path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>',
@@ -51,8 +52,8 @@ def get_page_context(active_page):
                 [
                     {
                         "title": "Cost", 
-                        "url_name": "cashagenda_new_cost", 
-                        "active": active_page == "new_cost"
+                        "url_name": "cashagenda_add_cost", 
+                        "active": active_page == "add_cost"
                         },
                     # {
                     #     "title": "Profit", 
@@ -120,9 +121,11 @@ def journals(request):
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
-def new_cost(request):
+def add_cost(request):
+        
+    context = get_page_context("add_cost")
+    form = AddCost()
+    context["form"] = form
     
-    context = get_page_context("new_cost")
-
-    html_template = loader.get_template('cashagenda/new_cost.html')
+    html_template = loader.get_template('cashagenda/add_cost.html')
     return HttpResponse(html_template.render(context, request))

@@ -1,0 +1,21 @@
+{% extends "cashagenda/layouts/base.html" %}
+
+{% block title %} Add cost {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<h2> Add cost </h2>
+
+<form action="{% url 'cashagenda_add_cost' %}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type=submit>Add</button>
+</form>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
