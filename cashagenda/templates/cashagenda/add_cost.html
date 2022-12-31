@@ -9,7 +9,7 @@
 
 <h2> Add cost </h2>
 
-<form action="{% url 'cashagenda_add_cost' %}" method="post">
+<form action="{% url 'cashagenda_add_cost' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
     <button type=submit>Add</button>

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -124,7 +124,15 @@ def journals(request):
 def add_cost(request):
         
     context = get_page_context("add_cost")
-    form = AddCost()
+    
+    if request.method == "POST":
+        form = AddCost(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("cashagenda_journals")
+    else:
+        form = AddCost()
+        
     context["form"] = form
     
     html_template = loader.get_template('cashagenda/add_cost.html')
