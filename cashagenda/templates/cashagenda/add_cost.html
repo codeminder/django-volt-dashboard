@@ -12,7 +12,8 @@
 <form action="{% url 'cashagenda_add_cost' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
-    <button type=submit>Add</button>
+    <button class="btn btn-lg btn-outline-success" type=submit>Add</button>
+    <button class="btn btn-lg btn-outline-danger" type=reset>Escape</button>
 </form>
 
 {% endblock content %}
