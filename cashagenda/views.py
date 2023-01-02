@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from .forms import *
+from .models import *
 
 svg_paths = {
     "round_diagramm" : r'<path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>',
@@ -116,6 +117,10 @@ def budgets(request):
 def journals(request):
     
     context = get_page_context("journals")
+    docs = Document.objects.all()
+    # for doc in docs:
+    #     print(doc)
+    context["docs"] = docs
 
     html_template = loader.get_template('cashagenda/journals.html')
     return HttpResponse(html_template.render(context, request))
