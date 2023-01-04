@@ -2,8 +2,11 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.urls import reverse_lazy
 from .forms import *
 from .models import *
+from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 svg_paths = {
     "round_diagramm" : r'<path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>',
@@ -56,11 +59,11 @@ def get_page_context(active_page):
                         "url_name": "cashagenda_add_cost", 
                         "active": active_page == "add_cost"
                         },
-                    # {
-                    #     "title": "Profit", 
-                    #     "url_name": "cashagenda_new_profit", 
-                    #     "active": active_page == "new_profit"
-                    #     }                   
+                    {
+                        "title": "Profit", 
+                        "url_name": "cashagenda_add_profit", 
+                        "active": active_page == "add_profit"
+                        }                   
                     ], 
             "svg_content": svg_paths["page"]
             },
@@ -125,20 +128,31 @@ def journals(request):
     html_template = loader.get_template('cashagenda/journals.html')
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
-def add_cost(request):
+# @login_required(login_url="/login/")
+# def add_cost(request):
         
-    context = get_page_context("add_cost")
+#     context = get_page_context("add_cost")
     
-    if request.method == "POST":
-        form = AddCost(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("cashagenda_journals")
-    else:
-        form = AddCost()
+#     if request.method == "POST":
+#         form = AddCost(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("cashagenda_journals")
+#     else:
+#         form = AddCost()
         
-    context["form"] = form
+#     context["form"] = form
     
-    html_template = loader.get_template('cashagenda/add_cost.html')
-    return HttpResponse(html_template.render(context, request))
+#     html_template = loader.get_template('cashagenda/add_cost.html')
+#     return HttpResponse(html_template.render(context, request))
+class AddCostView(LoginRequiredMixin, CreateView):
+    
+    form_class = AddCostForm
+    template_name = 'cashagenda/add_cost.html'
+    success_url = reverse_lazy("cashagenda_journals")
+    
+class AddProfitView(LoginRequiredMixin, CreateView):
+    
+    form_class = AddProfitForm
+    template_name = 'cashagenda/add_profit.html'
+    success_url = reverse_lazy("cashagenda_journals")
