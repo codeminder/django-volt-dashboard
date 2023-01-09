@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
 import django.utils.timezone
 from django.core.exceptions import ValidationError
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 
 class User(AbstractUser):
@@ -91,15 +91,17 @@ class Document(models.Model):
         return self._meta.model_name
     
     def get_absolute_url(self):
-        return reverse("view_doc", kwargs={"doc_id": self.pk, "type_doc": self._meta.model_name})
+        # return reverse("view_doc", kwargs={"doc_id": self.pk, "type_doc": self._meta.model_name})
+        return reverse_lazy("cashagenda_cost_update", kwargs={"pk": self.pk})
     
 
 
 class Profit(Document):
     
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__()
     budget = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Статья")
+    
+    # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
+    #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
         
     def __str__(self, *args, **kwargs):
         return super().__str__()
@@ -126,8 +128,8 @@ class Cost(Document):
     
     budget = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Статья")
         
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__()
+    # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
+    #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
         
     def __str__(self, *args, **kwargs):
         return super().__str__()
@@ -155,8 +157,8 @@ class Transfer(Document):
     
     account_in = models.ForeignKey(Account, on_delete=models.PROTECT, related_name="IncomeAccount", verbose_name="Счет поступления")
     
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__()
+    # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
+    #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
         
     def __str__(self, *args, **kwargs):
         return super().__str__()
@@ -185,8 +187,8 @@ class Inventory(Document):
     budget   = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Статья")
     sum_diff = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма разница", default=0)
     
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__()
+    # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
+    #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
     
     def __str__(self, *args, **kwargs):
         return super().__str__()

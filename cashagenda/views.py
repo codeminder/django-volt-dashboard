@@ -5,7 +5,7 @@ from django.template import loader
 from django.urls import reverse_lazy
 from .forms import *
 from .models import *
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 svg_paths = {
@@ -19,7 +19,8 @@ svg_paths = {
 
 def get_page_context(active_page):
     
-    menu = [
+    context = {}
+    sidebar_menu = [
         {
             "title": "Dashboard", 
             "url_name": "cashagenda_home", 
@@ -57,12 +58,12 @@ def get_page_context(active_page):
                     {
                         "title": "Cost", 
                         "url_name": "cashagenda_add_cost", 
-                        "active": active_page == "add_cost"
+                        "active": active_page == "cashagenda_add_cost"
                         },
                     {
                         "title": "Profit", 
                         "url_name": "cashagenda_add_profit", 
-                        "active": active_page == "add_profit"
+                        "active": active_page == "cashagenda_add_profit"
                         }                   
                     ], 
             "svg_content": svg_paths["page"]
@@ -87,7 +88,29 @@ def get_page_context(active_page):
             "svg_content": svg_paths["gear"]
             }
     ]
-    return {"sidebar_menu": menu}
+    context["sidebar_menu"] = sidebar_menu
+    
+    if active_page == "cashagenda_add_cost":
+        context["form_action"] = "cashagenda_add_cost"
+        context["model"] = Cost
+    elif active_page == "cashagenda_add_profit":
+        context["form_action"] = "cashagenda_add_profit"
+        context["model"] = Profit
+    elif active_page == "cashagenda_cost_update":
+        context["form_action"] = "cashagenda_cost_update"
+        context["model"] = Cost
+        
+        
+    if active_page == "cashagenda_add_cost":
+        context["page_tittle"] = "New cost"
+    elif active_page == "cashagenda_add_profit":
+        context["page_tittle"] = "New profit"
+    elif active_page == "cashagenda_cost_update":
+        context["page_tittle"] = "Update cost"
+    
+    
+    
+    return context
 
 
 # Create your views here.
@@ -150,9 +173,30 @@ class AddCostView(LoginRequiredMixin, CreateView):
     form_class = AddCostForm
     template_name = 'cashagenda/add_cost.html'
     success_url = reverse_lazy("cashagenda_journals")
+    # extra_context = get_page_context("AddCostView")
+    
+    # def get_context_data(self):
+    #     cdata = super().get_context_data()
+    #     cdata.update(get_page_context("AddCostView"))
+    #     return cdata
+    
+    # def get_context_data(self):
+
+    #     return get_page_context("AddCostView")
     
 class AddProfitView(LoginRequiredMixin, CreateView):
     
     form_class = AddProfitForm
     template_name = 'cashagenda/add_profit.html'
     success_url = reverse_lazy("cashagenda_journals")
+    
+class CostUpdateView(LoginRequiredMixin, UpdateView):
+    
+    # model = Cost
+    # model = Document  
+    form_class = AddCostForm
+    # model = AddCostForm.Meta.model
+    template_name = 'cashagenda/edit_doc.html'
+    # template_name = 'cashagenda/add_cost.html'
+    # def __init__(self, extra_context) -> None:
+    #     super().__init__()

@@ -1,0 +1,22 @@
+{% extends "cashagenda/layouts/base.html" %}
+
+{% block title %} {{ tittle }} {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<h2> {{ tittle }} </h2>
+
+<form action="{% url form_action object.pk %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button class="btn btn-lg btn-outline-success" type=submit>Add</button>
+    <button class="btn btn-lg btn-outline-danger" type=reset>Escape</button>
+</form>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
