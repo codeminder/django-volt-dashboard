@@ -177,11 +177,12 @@ def journals(request):
 
 class DocumentCreateCommon:
     success_url = reverse_lazy("cashagenda_journals")
+    template_name = 'cashagenda/new_doc.html'
     
 class CostCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
     form_class = AddCostForm
-    template_name = 'cashagenda/add_cost.html'
+    # template_name = 'cashagenda/add_cost.html'
     # success_url = reverse_lazy("cashagenda_journals")
     # extra_context = get_page_context("AddCostView")
     
@@ -197,26 +198,27 @@ class CostCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
 class ProfitCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
     form_class = AddProfitForm
-    template_name = 'cashagenda/add_profit.html'
+    # template_name = 'cashagenda/add_profit.html'
     
 class TransferCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
     form_class = AddProfitForm
-    template_name = 'cashagenda/add_profit.html'
+    # template_name = 'cashagenda/add_profit.html'
     
 class InventoryCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
     form_class = AddProfitForm
-    template_name = 'cashagenda/add_profit.html'
+    # template_name = 'cashagenda/add_profit.html'
     
 class CurrencyExchangeCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
     form_class = AddProfitForm
-    template_name = 'cashagenda/add_profit.html'
+    # template_name = 'cashagenda/add_profit.html'
 
 
 class DocumentUpdateCommon:
     template_name = 'cashagenda/edit_doc.html'
+    success_url = reverse_lazy("cashagenda_journals")
 
 class CostUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
     
