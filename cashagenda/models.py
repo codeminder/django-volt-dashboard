@@ -92,7 +92,7 @@ class Document(models.Model):
     
     def get_absolute_url(self):
         # return reverse("view_doc", kwargs={"doc_id": self.pk, "type_doc": self._meta.model_name})
-        return reverse_lazy("cashagenda_cost_update", kwargs={"pk": self.pk})
+        return reverse_lazy(f"cashagenda_{self.__class__.__name__.lower()}_update", kwargs={"pk": self.pk})
     
 
 

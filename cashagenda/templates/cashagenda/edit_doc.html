@@ -1,13 +1,13 @@
 {% extends "cashagenda/layouts/base.html" %}
 
-{% block title %} {{ tittle }} {% endblock %} 
+{% block title %} {{ page_tittle }} {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-<h2> {{ tittle }} </h2>
+<h2> {{ page_tittle }} </h2>
 
 <form action="{% url form_action object.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}

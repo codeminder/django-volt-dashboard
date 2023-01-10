@@ -57,13 +57,13 @@ def get_page_context(active_page):
                 [
                     {
                         "title": "Cost", 
-                        "url_name": "cashagenda_add_cost", 
-                        "active": active_page == "cashagenda_add_cost"
+                        "url_name": "cashagenda_cost_new", 
+                        "active": active_page == "cashagenda_cost_new"
                         },
                     {
                         "title": "Profit", 
-                        "url_name": "cashagenda_add_profit", 
-                        "active": active_page == "cashagenda_add_profit"
+                        "url_name": "cashagenda_profit_new", 
+                        "active": active_page == "cashagenda_profit_new"
                         }                   
                     ], 
             "svg_content": svg_paths["page"]
@@ -90,23 +90,28 @@ def get_page_context(active_page):
     ]
     context["sidebar_menu"] = sidebar_menu
     
-    if active_page == "cashagenda_add_cost":
-        context["form_action"] = "cashagenda_add_cost"
+    if active_page == "cashagenda_cost_new":
+        context["form_action"] = "cashagenda_cost_new"
         context["model"] = Cost
-    elif active_page == "cashagenda_add_profit":
-        context["form_action"] = "cashagenda_add_profit"
+    elif active_page == "cashagenda_profit_new":
+        context["form_action"] = "cashagenda_profit_new"
         context["model"] = Profit
     elif active_page == "cashagenda_cost_update":
         context["form_action"] = "cashagenda_cost_update"
         context["model"] = Cost
+    elif active_page == "cashagenda_profit_update":
+        context["form_action"] = "cashagenda_profit_update"
+        context["model"] = Profit
         
         
-    if active_page == "cashagenda_add_cost":
+    if active_page == "cashagenda_cost_new":
         context["page_tittle"] = "New cost"
-    elif active_page == "cashagenda_add_profit":
+    elif active_page == "cashagenda_profit_new":
         context["page_tittle"] = "New profit"
     elif active_page == "cashagenda_cost_update":
         context["page_tittle"] = "Update cost"
+    elif active_page == "cashagenda_profit_update":
+        context["page_tittle"] = "Update profit"
     
     
     
@@ -168,11 +173,16 @@ def journals(request):
     
 #     html_template = loader.get_template('cashagenda/add_cost.html')
 #     return HttpResponse(html_template.render(context, request))
-class AddCostView(LoginRequiredMixin, CreateView):
+
+
+class DocumentCreateCommon:
+    success_url = reverse_lazy("cashagenda_journals")
+    
+class CostCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
     form_class = AddCostForm
     template_name = 'cashagenda/add_cost.html'
-    success_url = reverse_lazy("cashagenda_journals")
+    # success_url = reverse_lazy("cashagenda_journals")
     # extra_context = get_page_context("AddCostView")
     
     # def get_context_data(self):
@@ -184,15 +194,33 @@ class AddCostView(LoginRequiredMixin, CreateView):
 
     #     return get_page_context("AddCostView")
     
-class AddProfitView(LoginRequiredMixin, CreateView):
+class ProfitCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
     form_class = AddProfitForm
     template_name = 'cashagenda/add_profit.html'
-    success_url = reverse_lazy("cashagenda_journals")
     
-class CostUpdateView(LoginRequiredMixin, UpdateView):
+class TransferCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
-    # model = Cost
+    form_class = AddProfitForm
+    template_name = 'cashagenda/add_profit.html'
+    
+class InventoryCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
+    
+    form_class = AddProfitForm
+    template_name = 'cashagenda/add_profit.html'
+    
+class CurrencyExchangeCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
+    
+    form_class = AddProfitForm
+    template_name = 'cashagenda/add_profit.html'
+
+
+class DocumentUpdateCommon:
+    template_name = 'cashagenda/edit_doc.html'
+
+class CostUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
+    
+    model = Cost
     # model = Document  
     form_class = AddCostForm
     # model = AddCostForm.Meta.model
@@ -200,3 +228,25 @@ class CostUpdateView(LoginRequiredMixin, UpdateView):
     # template_name = 'cashagenda/add_cost.html'
     # def __init__(self, extra_context) -> None:
     #     super().__init__()
+    
+class ProfitUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
+     
+    model = Profit
+    form_class = AddCostForm
+    
+class TransferUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
+     
+    model = Transfer
+    form_class = AddCostForm
+    
+class InventoryUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
+     
+    model = Inventory
+    form_class = AddCostForm
+    
+class CurrencyExchangeUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
+     
+    model = CurrencyExchange
+    form_class = AddCostForm
+    
+

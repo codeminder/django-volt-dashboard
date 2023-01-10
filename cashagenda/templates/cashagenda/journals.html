@@ -27,7 +27,9 @@
             {% for doc in docs %}
             <tr>
                 <td class="border-0">                                             
-                    <a href="#" class="d-flex align-items-center">
+                    <a href="{% if doc.cost %} {{ doc.cost.get_absolute_url }}
+                    {% elif doc.profit %} {{ doc.profit.get_absolute_url }}
+                    {% endif %}" class="d-flex align-items-center">
                         <img class="me-2 image image-small rounded-circle" alt="Image placeholder" src="/static/assets/img/flags/united-states-of-america.svg">
                         <div><span class="h6">
                             {% if doc.cost %} {{ doc.cost }}
