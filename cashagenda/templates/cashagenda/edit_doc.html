@@ -12,8 +12,9 @@
 <form action="{% url form_action object.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
-    <button class="btn btn-lg btn-outline-success" type=submit>Add</button>
-    <button class="btn btn-lg btn-outline-danger" type=reset>Escape</button>
+    <button class="btn btn-lg btn-outline-success" type=submit>Save&ampClose</button>
+    {% comment %} <button class="btn btn-lg btn-outline-danger" type=reset>Escape</button> {% endcomment %}
+    <a class="btn btn-lg btn-outline-danger" href="{% url 'cashagenda_journals' %}">Escape</a>
 </form>
 
 {% endblock content %}
