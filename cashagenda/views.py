@@ -105,13 +105,13 @@ def get_page_context(active_page):
         
         
     if active_page == "cashagenda_cost_new":
-        context["page_tittle"] = "New cost"
+        context["page_title"] = "New cost"
     elif active_page == "cashagenda_profit_new":
-        context["page_tittle"] = "New profit"
+        context["page_title"] = "New profit"
     elif active_page == "cashagenda_cost_update":
-        context["page_tittle"] = "Update cost"
+        context["page_title"] = "Update cost"
     elif active_page == "cashagenda_profit_update":
-        context["page_tittle"] = "Update profit"
+        context["page_title"] = "Update profit"
     
     
     
