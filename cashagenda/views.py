@@ -64,7 +64,22 @@ def get_page_context(active_page):
                         "title": "Profit", 
                         "url_name": "cashagenda_profit_new", 
                         "active": active_page == "cashagenda_profit_new"
-                        }                   
+                        },
+                    {
+                        "title": "Transfer", 
+                        "url_name": "cashagenda_transfer_new", 
+                        "active": active_page == "cashagenda_transfer_new"
+                        }, 
+                    {
+                        "title": "Inventory", 
+                        "url_name": "cashagenda_inventory_new", 
+                        "active": active_page == "cashagenda_profit_new"
+                        }, 
+                    {
+                        "title": "CurrencyExchange", 
+                        "url_name": "cashagenda_currencyexchange_new", 
+                        "active": active_page == "cashagenda_profit_new"
+                        },                    
                     ], 
             "svg_content": svg_paths["page"]
             },
@@ -96,6 +111,15 @@ def get_page_context(active_page):
     elif active_page == "cashagenda_profit_new":
         context["form_action"] = "cashagenda_profit_new"
         context["model"] = Profit
+    elif active_page == "cashagenda_transfer_new":
+        context["form_action"] = "cashagenda_transfer_new"
+        context["model"] = Transfer
+    elif active_page == "cashagenda_inventory_new":
+        context["form_action"] = "cashagenda_inventory_new"
+        context["model"] = Inventory
+    elif active_page == "cashagenda_currencyexchange_new":
+        context["form_action"] = "cashagenda_currencyexchange_new"
+        context["model"] = CurrencyExchange
     elif active_page == "cashagenda_cost_update":
         context["form_action"] = "cashagenda_cost_update"
         context["model"] = Cost
@@ -181,7 +205,7 @@ class DocumentCreateCommon:
     
 class CostCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
-    form_class = AddCostForm
+    form_class = CreateCostForm
     # template_name = 'cashagenda/add_cost.html'
     # success_url = reverse_lazy("cashagenda_journals")
     # extra_context = get_page_context("AddCostView")
@@ -197,22 +221,22 @@ class CostCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
 class ProfitCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
-    form_class = AddProfitForm
+    form_class = CreateProfitForm
     # template_name = 'cashagenda/add_profit.html'
     
 class TransferCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
-    form_class = AddProfitForm
+    form_class = CreateTransferForm
     # template_name = 'cashagenda/add_profit.html'
     
 class InventoryCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
-    form_class = AddProfitForm
+    form_class = CreateInventoryForm
     # template_name = 'cashagenda/add_profit.html'
     
 class CurrencyExchangeCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     
-    form_class = AddProfitForm
+    form_class = CreateCurrencyExchangeForm
     # template_name = 'cashagenda/add_profit.html'
 
 
@@ -224,7 +248,7 @@ class CostUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
     
     model = Cost
     # model = Document  
-    form_class = AddCostForm
+    form_class = CreateCostForm
     # model = AddCostForm.Meta.model
     template_name = 'cashagenda/edit_doc.html'
     # template_name = 'cashagenda/add_cost.html'
@@ -234,21 +258,21 @@ class CostUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
 class ProfitUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
      
     model = Profit
-    form_class = AddCostForm
+    form_class = CreateCostForm
     
 class TransferUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
      
     model = Transfer
-    form_class = AddCostForm
+    form_class = CreateCostForm
     
 class InventoryUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
      
     model = Inventory
-    form_class = AddCostForm
+    form_class = CreateCostForm
     
 class CurrencyExchangeUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
      
     model = CurrencyExchange
-    form_class = AddCostForm
+    form_class = CreateCostForm
     
 
