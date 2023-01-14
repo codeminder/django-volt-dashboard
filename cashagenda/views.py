@@ -108,36 +108,31 @@ def get_page_context(active_page):
     if active_page == "cashagenda_cost_new":
         context["form_action"] = "cashagenda_cost_new"
         context["model"] = Cost
+        context["page_title"] = "New cost"
     elif active_page == "cashagenda_profit_new":
         context["form_action"] = "cashagenda_profit_new"
         context["model"] = Profit
+        context["page_title"] = "New profit"
     elif active_page == "cashagenda_transfer_new":
         context["form_action"] = "cashagenda_transfer_new"
         context["model"] = Transfer
+        context["page_title"] = "New transfer"
     elif active_page == "cashagenda_inventory_new":
         context["form_action"] = "cashagenda_inventory_new"
         context["model"] = Inventory
+        context["page_title"] = "New inventory"
     elif active_page == "cashagenda_currencyexchange_new":
         context["form_action"] = "cashagenda_currencyexchange_new"
         context["model"] = CurrencyExchange
+        context["page_title"] = "New currency exchange"
     elif active_page == "cashagenda_cost_update":
         context["form_action"] = "cashagenda_cost_update"
         context["model"] = Cost
+        context["page_title"] = "Update cost"
     elif active_page == "cashagenda_profit_update":
         context["form_action"] = "cashagenda_profit_update"
         context["model"] = Profit
-        
-        
-    if active_page == "cashagenda_cost_new":
-        context["page_title"] = "New cost"
-    elif active_page == "cashagenda_profit_new":
-        context["page_title"] = "New profit"
-    elif active_page == "cashagenda_cost_update":
-        context["page_title"] = "Update cost"
-    elif active_page == "cashagenda_profit_update":
         context["page_title"] = "Update profit"
-    
-    
     
     return context
 

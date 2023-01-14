@@ -35,10 +35,16 @@
                     {% endif %}" class="d-flex align-items-center">
                         <img class="me-2 image image-small" alt="Image placeholder" {% if doc.cost %} src="{% static 'cashagenda/icons/icons8-minus-30.png' %}"
                         {% elif doc.profit %} src="{% static 'cashagenda/icons/icons8-add-30.png' %}"
+                        {% elif doc.transfer %} src="{% static 'cashagenda/icons/icons8-upvote-downvote-30.png' %}"
+                        {% elif doc.inventory %} src="{% static 'cashagenda/icons/icons8-in-inventory-30.png' %}"
+                        {% elif doc.currencyexchange %} src="{% static 'cashagenda/icons/icons8-currency-exchange-30.png' %}"
                         {% endif %}>
                         <div><span class="h6">
                             {% if doc.cost %} {{ doc.cost }}
                             {% elif doc.profit %} {{ doc.profit }}
+                            {% elif doc.transfer %} {{ doc.transfer }}
+                            {% elif doc.inventory %} {{ doc.inventory }}
+                            {% elif doc.currencyexchange %} {{ doc.currencyexchange }}
                             {% endif %}
                         </span></div>
                     </a>
@@ -53,7 +59,9 @@
                 <td class="border-0 text-success">
                     <div class="d-flex align-items-center">
                         <svg class="icon icon-xs me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>                                   
-                        <span class="fw-bold">{% if doc.cost or doc.profit %} {{ doc.account }} {% endif %}</span>
+                        <span class="fw-bold">{% if doc.cost or doc.profit or doc.inventory or doc.currencyexchange %} {{ doc.account }}
+                            {% elif doc.transfer %} {{ doc.account }} - {{ doc.transfer.account_in }} 
+                            {% endif %}</span>
                     </div>
                 </td>
                 <td class="border-0 text-success">
@@ -62,6 +70,7 @@
                         <span class="fw-bold">
                             {% if doc.cost %} {{ doc.cost.budget }}
                             {% elif doc.profit %} {{ doc.profit.budget }}
+                            {% elif doc.inventory %} {{ doc.inventory.budget }}
                             {% endif %}
 
                         </span>

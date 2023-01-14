@@ -213,7 +213,7 @@ class Inventory(Document):
 class CurrencyExchange(Document):
     
     currency_in = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name="OutcomeCurrency", verbose_name="Валюта покупки")
-    sum_in      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма разница", default=0)
+    sum_in      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма покупки", default=0)
     
     # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
     #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
