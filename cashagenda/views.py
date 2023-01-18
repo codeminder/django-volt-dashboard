@@ -134,6 +134,11 @@ def get_page_context(active_page):
         context["model"] = Profit
         context["page_title"] = "Update profit"
     
+    # dataset = Account.objects.values("id", "name", "balance_records")
+    # acc1 = Account.objects.values("id", "name", "balance_records__sum")
+    # context["dataset"] = dataset
+    # Account.objects.values("id", "name").annotate(Sum("balance_records__sum"))
+    
     return context
 
 
