@@ -7,6 +7,7 @@ from .forms import *
 from .models import *
 from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 
 svg_paths = {
     "round_diagramm" : r'<path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>',
@@ -133,11 +134,8 @@ def get_page_context(active_page):
         context["form_action"] = "cashagenda_profit_update"
         context["model"] = Profit
         context["page_title"] = "Update profit"
-    
-    # dataset = Account.objects.values("id", "name", "balance_records")
-    # acc1 = Account.objects.values("id", "name", "balance_records__sum")
-    # context["dataset"] = dataset
-    # Account.objects.values("id", "name").annotate(Sum("balance_records__sum"))
+    elif active_page == "dashboard":
+        context["accounts_balance"] = Account.objects.values("id", "name").annotate(balance=Sum("balance_records__sum"))
     
     return context
 
@@ -172,7 +170,14 @@ def budgets(request):
 def journals(request):
     
     context = get_page_context("journals")
-    docs = Document.objects.all()
+    docs = Document.objects.all().select_related("profit", "cost", "transfer", "inventory", 
+                                                 "currencyexchange", "currency", "account", 
+                                                 "cost__budget", "profit__budget", "inventory__budget",
+                                                 "transfer__account_in", 
+                                                 "currencyexchange__currency_in", 
+                                                #  "currencyexchange__sum_in",
+                                                #  "inventory__sum_diff"
+                                                 )
     # for doc in docs:
     #     print(doc)
     context["docs"] = docs

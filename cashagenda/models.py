@@ -109,7 +109,8 @@ class Profit(Document):
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        br = BalanceRecord(document=self.document_ptr, date=self.date, sum=self.sum, account=self.account)
+        br = BalanceRecord(document=self.document_ptr, date=self.date, sum=self.sum, 
+                           account=self.account, currency=self.currency)
         br.save()
         self.balance_records.set([br])
     
@@ -137,7 +138,8 @@ class Cost(Document):
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        br = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum, account=self.account)
+        br = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum, 
+                           account=self.account, currency=self.currency)
         br.save()
         self.balance_records.set([br])
     
@@ -166,9 +168,11 @@ class Transfer(Document):
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        br1 = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum, account=self.account)
+        br1 = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum, 
+                            account=self.account, currency=self.currency)
         br1.save()
-        br2 = BalanceRecord(document=self.document_ptr, date=self.date, sum=self.sum, account=self.account_in)
+        br2 = BalanceRecord(document=self.document_ptr, date=self.date, sum=self.sum, 
+                            account=self.account_in, currency=self.currency)
         br2.save()
         self.balance_records.set([br1, br2])
     
@@ -193,9 +197,11 @@ class Inventory(Document):
     def __str__(self, *args, **kwargs):
         return super().__str__()
     
+    @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        br = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum_diff, account=self.account)
+        br = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum_diff, 
+                           account=self.account, currency=self.currency)
         br.save()
 
         self.balance_records.set([br])
@@ -221,11 +227,14 @@ class CurrencyExchange(Document):
     def __str__(self, *args, **kwargs):
         return super().__str__()
     
+    @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        br1 = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum, account=self.account)
+        br1 = BalanceRecord(document=self.document_ptr, date=self.date, sum=-self.sum, 
+                            account=self.account, currency=self.currency)
         br1.save()
-        br2 = BalanceRecord(document=self.document_ptr, date=self.date, sum=self.sum_in, account=self.account)
+        br2 = BalanceRecord(document=self.document_ptr, date=self.date, sum=self.sum_in, 
+                            account=self.account, currency=self.currency_in)
         br2.save()
         self.balance_records.set([br1, br2])
 
@@ -243,6 +252,7 @@ class BalanceRecord(models.Model):
     
     date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
     sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма", default=0)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Валюта", default=1)
     balance  = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Баланс", default=0)
     account  = models.ForeignKey(Account, on_delete=models.PROTECT, verbose_name="Счет", related_name="balance_records")
     document = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name="Документ", related_name="balance_records")
