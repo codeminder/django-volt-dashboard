@@ -8,6 +8,7 @@ from .models import *
 from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
+from .utils import getAccountCurrencyCrossTable
 
 svg_paths = {
     "round_diagramm" : r'<path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>',
@@ -135,7 +136,7 @@ def get_page_context(active_page):
         context["model"] = Profit
         context["page_title"] = "Update profit"
     elif active_page == "dashboard":
-        context["accounts_balance"] = Account.objects.values("id", "name").annotate(balance=Sum("balance_records__sum"))
+        context["acc_cur_cross_table"] = getAccountCurrencyCrossTable()
     
     return context
 
