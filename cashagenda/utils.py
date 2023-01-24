@@ -48,13 +48,13 @@ def getAccountCurrencyCrossTable():
         for cur in cur_arr:
             if acc.get(cur["currency"]):
                 sum = acc[cur["currency"]]["cur_sum"]
+                bal_sum = acc[cur["currency"]]["bal_sum"]
                 if cur["course"] > 1:
-                    bal_sum = acc[cur["currency"]]["bal_sum"]
-                    acc["currency_sums"].append(f"{sum:.2f} ({bal_sum:.2f})")
+                    acc["currency_sums"].append({"bal_sum": bal_sum, "sum_view":f"{sum:.2f} ({bal_sum:.2f})"})
                 else:
-                    acc["currency_sums"].append(f"{sum:.2f}")
+                    acc["currency_sums"].append({"bal_sum": bal_sum, "sum_view":f"{sum:.2f}"})
             else:
-                acc["currency_sums"].append("-")
+                acc["currency_sums"].append({"bal_sum": 0, "sum_view":"-"})
         
         acc["percent"] = 0        
         if acc["acc_sum"] > 0 and basis_for_persent > 0:
