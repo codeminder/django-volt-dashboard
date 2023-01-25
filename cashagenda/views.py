@@ -9,6 +9,7 @@ from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from .utils import getAccountCurrencyCrossTable
+from django.views.generic import DetailView
 
 svg_paths = {
     "round_diagramm" : r'<path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>',
@@ -203,6 +204,21 @@ def journals(request):
     
 #     html_template = loader.get_template('cashagenda/add_cost.html')
 #     return HttpResponse(html_template.render(context, request))
+
+def example_form(request):
+    context ={}
+    if request.method == "POST":
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("cashagenda_journals")
+    else:
+        form = ExampleForm()
+        
+    context["form"] = form
+    
+    html_template = loader.get_template('cashagenda/example.html')
+    return HttpResponse(html_template.render(context, request))
 
 
 class DocumentCreateCommon:

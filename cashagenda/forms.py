@@ -1,11 +1,18 @@
 from django import forms
 from .models import *
 
+from .widget import DatePickerInput, TimePickerInput, DateTimePickerInput
+
+class ExampleForm(forms.Form):
+        my_date_field = forms.DateField(widget=DatePickerInput)
+        my_time_field = forms.TimeField(widget=TimePickerInput)
+        my_date_time_field = forms.DateTimeField(widget=DateTimePickerInput)
+
 class CostProfitMetaTemplate:
         # fields = '__all__'
         fields = ('date', 'account', 'sum', 'currency', 'comment', 'budget', 'photo',)
         widgets = {
-            'date': forms.DateTimeInput(attrs={
+            'date': DatePickerInput(attrs={   #forms.DateTimeInput
                 'class': 'form-control datepicker-input', 
                 'placeholder': 'YYYY-MM-DD hh:mm:ss',
                 'required': 'required'}),

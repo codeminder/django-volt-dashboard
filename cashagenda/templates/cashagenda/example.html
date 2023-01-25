@@ -1,0 +1,11 @@
+<head></head>
+<body>
+<h2> Add cost </h2>
+
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button class="btn btn-lg btn-outline-success" type=submit>Add</button>
+    <button class="btn btn-lg btn-outline-danger" type=reset>Escape</button>
+</form>
+</body>

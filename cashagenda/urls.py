@@ -29,5 +29,6 @@ urlpatterns = [
     path('transfer/edit/<int:pk>/', TransferUpdateView.as_view(extra_context = get_page_context("cashagenda_transfer_update")), name='cashagenda_transfer_update'),
     path('inventory/edit/<int:pk>/', InventoryUpdateView.as_view(extra_context = get_page_context("cashagenda_inventory_update")), name='cashagenda_inventory_update'),
     path('currencyexchange/edit/<int:pk>/', CurrencyExchangeUpdateView.as_view(extra_context = get_page_context("cashagenda_currencyexchange_update")), name='cashagenda_currencyexchange_update'),
+    path('example/', views.example_form),
 
 ]
