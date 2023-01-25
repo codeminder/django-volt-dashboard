@@ -202,3 +202,5 @@ if DEBUG:
             }
         }
     }
+    
+    ALLOWED_HOSTS += "*"
