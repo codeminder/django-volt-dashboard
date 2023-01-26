@@ -11,7 +11,8 @@ class TimePickerInput(forms.TimeInput):
 
 class DateTimePickerInput(forms.DateTimeInput):
     input_type = 'datetime'
-    
+
+# Thanks to https://gist.github.com/andytwoods/76f18f5ddeba9192d51dccc922086e43 
 class MinimalSplitDateTimeMultiWidget(MultiWidget):
 
     def __init__(self, widgets=None, attrs=None):
