@@ -57,14 +57,14 @@ class Document(models.Model):
     date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
     # currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     # number = models.AutoField(primary_key=False)
-    account  = models.ForeignKey(Account, on_delete=models.PROTECT, verbose_name="Счет")
-    sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма", default=0)
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Валюта")
-    comment  = models.TextField(verbose_name="Комментарий", default="", blank=True)
+    account  = models.ForeignKey(Account, on_delete=models.PROTECT, verbose_name="Account")
+    sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Currency")
+    comment  = models.TextField(verbose_name="Comment", default="", blank=True)
     photo    = models.ImageField(upload_to='photos/%Y/%m/', blank=True)
     # posted   = models.BooleanField(default=False)
     def __str__(self):
-        return "{0} №{1} от {2}".format(self._meta.verbose_name, self.id, self.date.strftime("%Y-%b-%d %H:%M:%S"))
+        return "{0} №{1} от {2}".format(self._meta.verbose_name, self.id, self.date.strftime("%d.%m.%Y %H:%M"))
     
     # class Meta():
     #     ordering = ["date"]
@@ -98,7 +98,7 @@ class Document(models.Model):
 
 class Profit(Document):
     
-    budget = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Статья")
+    budget = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Budget")
     
     # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
     #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
@@ -115,8 +115,8 @@ class Profit(Document):
         self.balance_records.set([br])
     
     class Meta():
-        verbose_name = "Прибыль"
-        verbose_name_plural = "Прибыли"
+        verbose_name = "Profit"
+        verbose_name_plural = "Profits"
         # fields = ('date', 'sum_in', 'currency', 'account_in', 'comment')
         
     def clean(self):
@@ -127,7 +127,7 @@ class Profit(Document):
 
 class Cost(Document):
     
-    budget = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Статья")
+    budget = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Budget")
         
     # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
     #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
@@ -144,8 +144,8 @@ class Cost(Document):
         self.balance_records.set([br])
     
     class Meta():
-        verbose_name = "Затрата"
-        verbose_name_plural = "Затраты"
+        verbose_name = "Cost"
+        verbose_name_plural = "Costs"
         # fields = ('date', 'sum_out', 'currency', 'account_out', 'comment')
     
     def clean(self):
@@ -157,7 +157,7 @@ class Cost(Document):
 
 class Transfer(Document):
     
-    account_in = models.ForeignKey(Account, on_delete=models.PROTECT, related_name="IncomeAccount", verbose_name="Счет поступления")
+    account_in = models.ForeignKey(Account, on_delete=models.PROTECT, related_name="IncomeAccount", verbose_name="Income Account")
     
     # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
     #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
@@ -177,8 +177,8 @@ class Transfer(Document):
         self.balance_records.set([br1, br2])
     
     class Meta():
-        verbose_name = "Перемещение"
-        verbose_name_plural = "Перемещения"
+        verbose_name = "Transfer"
+        verbose_name_plural = "Transfers"
     
     def clean(self):
             # return super().clean()
@@ -188,8 +188,8 @@ class Transfer(Document):
 
 class Inventory(Document):
     
-    budget   = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Статья")
-    sum_diff = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма разница", default=0)
+    budget   = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Budget")
+    sum_diff = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Diff sum", default=0)
     
     # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
     #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
@@ -207,8 +207,8 @@ class Inventory(Document):
         self.balance_records.set([br])
     
     class Meta():
-        verbose_name = "Инвентаризация"
-        verbose_name_plural = "Инвентаризации"
+        verbose_name = "Inventory"
+        verbose_name_plural = "Inventories"
     
     def clean(self):
             # return super().clean()
@@ -218,8 +218,8 @@ class Inventory(Document):
 
 class CurrencyExchange(Document):
     
-    currency_in = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name="OutcomeCurrency", verbose_name="Валюта покупки")
-    sum_in      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма покупки", default=0)
+    currency_in = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name="OutcomeCurrency", verbose_name="Outcome currency")
+    sum_in      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Outcome currency", default=0)
     
     # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
     #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html
@@ -240,8 +240,8 @@ class CurrencyExchange(Document):
 
     
     class Meta():
-        verbose_name = "Обмен валюты"
-        verbose_name_plural = "Обмены валют"
+        verbose_name = "Currency exchange"
+        verbose_name_plural = "Currency exchanges"
     
     def clean(self):
             # return super().clean()
@@ -251,11 +251,11 @@ class CurrencyExchange(Document):
 class BalanceRecord(models.Model):
     
     date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
-    sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма", default=0)
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Валюта", default=1)
-    balance  = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Баланс", default=0)
-    account  = models.ForeignKey(Account, on_delete=models.PROTECT, verbose_name="Счет", related_name="balance_records")
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name="Документ", related_name="balance_records")
+    sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Currency", default=1)
+    balance  = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Balance", default=0)
+    account  = models.ForeignKey(Account, on_delete=models.PROTECT, verbose_name="Account", related_name="balance_records")
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name="Document", related_name="balance_records")
     
     def __str__(self, *args, **kwargs):
         return "{0} to {1}".format(self.sum, self.account)
@@ -263,6 +263,6 @@ class BalanceRecord(models.Model):
 class BudgetRecord(models.Model):
     
     date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
-    sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма", default=0)
-    account  = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Статья", related_name="budget_records")
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name="Документ", related_name="budget_records")
+    sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)
+    budget  = models.ForeignKey(Budget, on_delete=models.PROTECT, verbose_name="Budget", related_name="budget_records")
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name="Document", related_name="budget_records")
