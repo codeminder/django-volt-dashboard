@@ -1,0 +1,81 @@
+{% extends "cashagenda/layouts/base.html" %}
+
+{% block title %} {{ page_title }} {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<h2> {{ object }} </h2>
+
+<form action="{% url form_action object.pk %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ form.date.errors }}
+        {{ form.date.label_tag }}
+        {{ form.date }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.account.errors }}
+        {{ form.account.label_tag }}
+        {{ form.account }}
+    </div>
+    {% if form.account_in %}
+    <div class="fieldWrapper">
+        {{ form.account_in.errors }}
+        {{ form.account_in.label_tag }}
+        {{ form.account_in }}
+    </div>
+    {% endif %}
+    <div class="fieldWrapper">
+        {{ form.sum.errors }}
+        {{ form.sum.label_tag }}
+        {{ form.sum }}
+    </div>
+    {% if form.sum_diff %}
+    <div class="fieldWrapper">
+        {{ form.sum_diff.errors }}
+        {{ form.sum_diff.label_tag }}
+        {{ form.sum_diff }}
+    </div>
+    {% endif %}
+    <div class="fieldWrapper">
+        {{ form.currency.errors }}
+        {{ form.currency.label_tag }}
+        {{ form.currency }}
+    </div>
+    {% if form.currency_in %}
+    <div class="fieldWrapper">
+        {{ form.currency_in.errors }}
+        {{ form.currency_in.label_tag }}
+        {{ form.currency_in }}
+    </div>
+    {% endif %}
+    {% if form.budget %}
+    <div class="fieldWrapper">
+        {{ form.budget.errors }}
+        {{ form.budget.label_tag }}
+        {{ form.budget }}
+    </div>
+    {% endif %}
+    <div class="fieldWrapper">
+        {{ form.comment.errors }}
+        {{ form.comment.label_tag }}
+        {{ form.comment }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.photo.errors }}
+        {{ form.photo.label_tag }}
+        {{ form.photo }}
+    </div>
+    <button class="btn btn-lg btn-outline-success" type=submit>Save&ampClose</button>
+    {% comment %} <button class="btn btn-lg btn-outline-danger" type=reset>Escape</button> {% endcomment %}
+    <a class="btn btn-lg btn-outline-danger" href="{% url 'cashagenda_journals' %}">Escape</a>
+</form>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

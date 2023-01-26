@@ -1,7 +1,7 @@
 from django import forms
 from datetime import datetime
 from django.utils.timezone import make_aware
-from django.forms import TextInput, MultiWidget, DateTimeField
+from django.forms import TextInput, MultiWidget, DateTimeField, DateInput
 
 class DatePickerInput(forms.DateInput):
     input_type = 'date'
@@ -27,6 +27,7 @@ class MinimalSplitDateTimeMultiWidget(MultiWidget):
 
             widgets = [
                 TextInput(attrs=date_attrs),
+                # DateInput(attrs=date_attrs),
                 TextInput(attrs=time_attrs),
             ]
         super().__init__(widgets, attrs)

@@ -263,7 +263,8 @@ class CurrencyExchangeCreateView(DocumentCreateCommon, LoginRequiredMixin, Creat
 
 
 class DocumentUpdateCommon:
-    template_name = 'cashagenda/edit_doc.html'
+    # template_name = 'cashagenda/edit_doc.html'
+    template_name = 'cashagenda/edit_doc_custom.html'
     success_url = reverse_lazy("cashagenda_journals")
 
 class CostUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
@@ -272,7 +273,7 @@ class CostUpdateView(DocumentUpdateCommon, LoginRequiredMixin, UpdateView):
     # model = Document  
     form_class = CreateCostForm
     # model = AddCostForm.Meta.model
-    template_name = 'cashagenda/edit_doc.html'
+    # template_name = 'cashagenda/edit_doc.html'
     # template_name = 'cashagenda/add_cost.html'
     # def __init__(self, extra_context) -> None:
     #     super().__init__()
