@@ -94,7 +94,8 @@ def example_form(request):
 
 class DocumentCreateCommon:
     success_url = reverse_lazy("cashagenda_journals")
-    template_name = 'cashagenda/new_doc.html'
+    # template_name = 'cashagenda/new_doc.html'
+    template_name = 'cashagenda/edit_doc_custom.html'
     
 class CostCreateView(DocumentCreateCommon, LoginRequiredMixin, CreateView):
     

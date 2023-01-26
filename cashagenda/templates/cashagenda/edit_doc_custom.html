@@ -6,10 +6,15 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-
+{% if variant == "edit" %}
 <h2> {{ object }} </h2>
 
 <form action="{% url form_action object.pk %}" method="post" enctype="multipart/form-data">
+{% elif variant == "new" %}
+<h2> {{ page_title }} </h2>
+
+<form action="{% url form_action %}" method="post" enctype="multipart/form-data">
+{% endif %}
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="fieldWrapper">

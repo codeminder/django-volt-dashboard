@@ -101,43 +101,43 @@ def get_page_context(active_page):
     
     if active_page == "cashagenda_cost_new":
         context["form_action"] = "cashagenda_cost_new"
-        # context["model"] = Cost
+        context["variant"] = "new"
         context["page_title"] = "New cost"
     elif active_page == "cashagenda_profit_new":
         context["form_action"] = "cashagenda_profit_new"
-        # context["model"] = Profit
+        context["variant"] = "new"
         context["page_title"] = "New profit"
     elif active_page == "cashagenda_transfer_new":
         context["form_action"] = "cashagenda_transfer_new"
-        # context["model"] = Transfer
+        context["variant"] = "new"
         context["page_title"] = "New transfer"
     elif active_page == "cashagenda_inventory_new":
         context["form_action"] = "cashagenda_inventory_new"
-        # context["model"] = Inventory
+        context["variant"] = "new"
         context["page_title"] = "New inventory"
     elif active_page == "cashagenda_currencyexchange_new":
         context["form_action"] = "cashagenda_currencyexchange_new"
-        # context["model"] = CurrencyExchange
+        context["variant"] = "new"
         context["page_title"] = "New currency exchange"
     elif active_page == "cashagenda_cost_update":
         context["form_action"] = "cashagenda_cost_update"
-        # context["model"] = Cost
+        context["variant"] = "edit"
         context["page_title"] = "Update cost"
     elif active_page == "cashagenda_profit_update":
         context["form_action"] = "cashagenda_profit_update"
-        # context["model"] = Profit
+        context["variant"] = "edit"
         context["page_title"] = "Update profit"
     elif active_page == "cashagenda_transfer_update":
         context["form_action"] = "cashagenda_transfer_update"
-        # context["model"] = Transfer
+        context["variant"] = "edit"
         context["page_title"] = "Update transfer"
     elif active_page == "cashagenda_inventory_update":
         context["form_action"] = "cashagenda_inventory_update"
-        # context["model"] = Inventory
+        context["variant"] = "edit"
         context["page_title"] = "Update inventory"
     elif active_page == "cashagenda_currencyexchange_update":
         context["form_action"] = "cashagenda_currencyexchange_update"
-        # context["model"] = CurrencyExchange
+        context["variant"] = "edit"
         context["page_title"] = "Update currencyexchange"
     elif active_page == "dashboard":
         context["acc_cur_cross_table"] = getAccountCurrencyCrossTable()
