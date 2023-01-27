@@ -4,6 +4,7 @@ from django.db import models, transaction
 import django.utils.timezone
 from django.core.exceptions import ValidationError
 from django.urls import reverse, reverse_lazy
+from django.db.models import Sum, Q
 
 
 class User(AbstractUser):
@@ -261,13 +262,16 @@ class CurrencyExchange(Document):
 class BalanceRecord(models.Model):
     
     @classmethod
-    def get_balance(cls, doc, acc, curr):
+    def get_balance_after(cls, doc, acc, curr):
         if not acc or not curr:
             return None
         if doc:
-            cls.objects.filter(account = acc, currency = curr, document__lte = doc).aggregate(sum = models.Sum("sum"))
+            # return cls.objects.filter(account = acc, currency = curr, date__lte = doc.date).aggregate(sum = models.Sum("sum"))["sum"]
+            return cls.objects.filter(Q(account = acc), Q(currency = curr), 
+                                      Q(date__lt = doc.date) | Q(date = doc.date) & Q(pk__lt = doc.pk)
+                                      ).aggregate(sum = Sum("sum"))["sum"]
         else:
-            cls.objects.filter(account = acc, currency = curr).aggregate(sum = models.Sum("sum"))
+            return cls.objects.filter(account = acc, currency = curr).aggregate(sum = Sum("sum"))["sum"]
     
     date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
     sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)
@@ -277,7 +281,7 @@ class BalanceRecord(models.Model):
     document = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name="Document", related_name="balance_records")
     
     def __str__(self, *args, **kwargs):
-        return "{0} to {1}".format(self.sum, self.account)
+        return "{0} to {1} from {2}".format(self.sum, self.account, self.document)
     
 class BudgetRecord(models.Model):
     
