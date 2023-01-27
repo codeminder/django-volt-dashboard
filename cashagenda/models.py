@@ -66,6 +66,13 @@ class Document(models.Model):
     def __str__(self):
         return "{0} №{1} от {2}".format(self._meta.verbose_name, self.id, self.date.strftime("%d.%m.%Y %H:%M"))
     
+    def __cmp__(self, other):
+        if self.date < other.date or (self.date == other.date and self.pk < other.pk):
+            return -1
+        elif self.date > other.date  or (self.date == other.date and self.pk > other.pk):
+            return 1       
+        return 0
+    
     # class Meta():
     #     ordering = ["date"]
         

@@ -11,6 +11,7 @@ from django.db.models import Sum
 from .utils import getAccountCurrencyCrossTable
 from django.views.generic import DetailView
 from .utils import get_page_context
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -91,6 +92,20 @@ def example_form(request):
     html_template = loader.get_template('cashagenda/example.html')
     return HttpResponse(html_template.render(context, request))
 
+def get_account_balance(request):
+    # request should be ajax and method should be GET.
+    if request.is_ajax and request.method == "POST":
+        # get the nick name from the client side.
+        nick_name = request.GET.get("nick_name", None)
+        # check for the nick name in the database.
+        if BalanceRecord.objects.filter(nick_name = nick_name).exists():
+            # if nick_name found return not valid new friend
+            return JsonResponse({"valid":False}, status = 200)
+        else:
+            # if nick_name not found, then user can create a new friend.
+            return JsonResponse({"valid":True}, status = 200)
+
+    return JsonResponse({}, status = 400)
 
 class DocumentCreateCommon:
     success_url = reverse_lazy("cashagenda_journals")
