@@ -51,7 +51,7 @@ def journals(request):
                                                  "currencyexchange__currency_in", 
                                                 #  "currencyexchange__sum_in",
                                                 #  "inventory__sum_diff"
-                                                 ).order_by("-date")
+                                                 ).order_by("-date", "-pk")
     # for doc in docs:
     #     print(doc)
     context["docs"] = docs

@@ -84,7 +84,10 @@ class Document(models.Model):
     # def unpost(self):
     #     self.posted = False
     #     self.save()
-    # def save(self, *args, **kwargs):
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        BalanceRecord.objects.filter(document = self.pk).delete()
+        BudgetRecord.objects.filter(document = self.pk).delete()
     #     if self == None:
     #         raise Exception
     
@@ -256,6 +259,15 @@ class CurrencyExchange(Document):
         
         
 class BalanceRecord(models.Model):
+    
+    @classmethod
+    def get_balance(cls, doc, acc, curr):
+        if not acc or not curr:
+            return None
+        if doc:
+            cls.objects.filter(account = acc, currency = curr, document__lte = doc).aggregate(sum = models.Sum("sum"))
+        else:
+            cls.objects.filter(account = acc, currency = curr).aggregate(sum = models.Sum("sum"))
     
     date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
     sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)
