@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from .utils import getAccountCurrencyCrossTable
 from django.views.generic import DetailView
-from .utils import get_page_context
+from .utils import get_page_context, get_aware_datetime
 from django.http import JsonResponse
 
 
@@ -92,12 +92,27 @@ def example_form(request):
     html_template = loader.get_template('cashagenda/example.html')
     return HttpResponse(html_template.render(context, request))
 
-def get_account_balance(request):
-    # request should be ajax and method should be GET.
+def get_ajax_account_balance(request):
+    # request should be ajax and method should be POST.
     if request.is_ajax and request.method == "POST":
-        # get the nick name from the client side.
-        nick_name = request.GET.get("nick_name", None)
-        # check for the nick name in the database.
+        # get the data from the client side.
+        doc_id = request.GET.get("doc_id", None)
+        acc_id = request.GET.get("acc_id", None)
+        cur_id = request.GET.get("cur_id", None)
+        date_str = request.GET.get("date", None)
+        
+        if not acc_id or not cur_id:
+            return JsonResponse({}, status = 400)
+        
+        acc = Account.objects.get(pk=acc_id)
+        cur = Currency.objects.get(pk=cur_id)
+        
+        if doc_id:
+            doc = Document.objects.get(pk=doc_id)
+
+        if date_str:
+            date_str =  
+            
         if BalanceRecord.objects.filter(nick_name = nick_name).exists():
             # if nick_name found return not valid new friend
             return JsonResponse({"valid":False}, status = 200)

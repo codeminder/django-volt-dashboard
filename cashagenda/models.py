@@ -265,18 +265,29 @@ class CurrencyExchange(Document):
 class BalanceRecord(models.Model):
     
     @classmethod
-    def get_balance_undo(cls, doc, acc, curr):
+    def get_balance_undo(cls, acc, curr, date_doc, doc):
+        
+        # most be filled, else its dont have matter
         if not acc or not curr:
             return None
-        if isinstance(doc, Document):
+        
+        # it worked if doc not saved and document.date <> date_doc
+        if isinstance(doc, Document) and isinstance(date_doc, datetime): 
             # return cls.objects.filter(account = acc, currency = curr, date__lte = doc.date).aggregate(sum = models.Sum("sum"))["sum"]
             return cls.objects.filter(Q(account = acc), Q(currency = curr), 
-                                      Q(date__lt = doc.date) | Q(date = doc.date) & Q(pk__lt = doc.pk)
+                                      Q(date__lt = doc.date) | Q(date = date_doc) & Q(document__pk__lt = doc.pk)
                                       ).aggregate(sum = Sum("sum"))["sum"]
-        elif isinstance(doc, datetime):
+         # it worked if doc not filled and position or doc dont have matter
+        elif isinstance(date_doc, datetime):
             return cls.objects.filter(Q(account = acc), Q(currency = curr), 
-                                      Q(date__lt = doc)
+                                      Q(date__lt = date_doc)
                                       ).aggregate(sum = Sum("sum"))["sum"]
+        # it worked if doc saved and document.date = date_doc
+        if isinstance(doc, Document) and isinstance(date_doc, datetime): 
+            return cls.objects.filter(Q(account = acc), Q(currency = curr), 
+                                      Q(date__lt = doc.date) | Q(date = date_doc) & Q(document__pk__lt = doc.pk)
+                                      ).aggregate(sum = Sum("sum"))["sum"]
+        # if intend acc and curr only - calculate last value
         else:
             return cls.objects.filter(account = acc, currency = curr).aggregate(sum = Sum("sum"))["sum"]
     
