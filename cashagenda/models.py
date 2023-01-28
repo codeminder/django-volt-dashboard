@@ -267,7 +267,7 @@ class BalanceRecord(models.Model):
     def get_balance_after(cls, doc, acc, curr):
         if not acc or not curr:
             return None
-        if doc:
+        if isinstance(doc, Document):
             # return cls.objects.filter(account = acc, currency = curr, date__lte = doc.date).aggregate(sum = models.Sum("sum"))["sum"]
             return cls.objects.filter(Q(account = acc), Q(currency = curr), 
                                       Q(date__lt = doc.date) | Q(date = doc.date) & Q(pk__lt = doc.pk)
