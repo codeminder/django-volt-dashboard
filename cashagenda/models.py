@@ -87,8 +87,10 @@ class Document(models.Model):
     #     self.save()
     @transaction.atomic
     def save(self, *args, **kwargs):
-        BalanceRecord.objects.filter(document = self.pk).delete()
-        BudgetRecord.objects.filter(document = self.pk).delete()
+        super().save(*args, **kwargs)
+        if self.pk:
+            BalanceRecord.objects.filter(document = self.pk).delete()
+            BudgetRecord.objects.filter(document = self.pk).delete()
     #     if self == None:
     #         raise Exception
     
@@ -229,8 +231,8 @@ class Inventory(Document):
 
 class CurrencyExchange(Document):
     
-    currency_in = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name="OutcomeCurrency", verbose_name="Outcome currency")
-    sum_in      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Outcome currency", default=0)
+    currency_in = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name="IncomeCurrency", verbose_name="Income currency")
+    sum_in      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Income sum", default=0)
     
     # def __init__(self, *args, **kwargs): # Django в документации не советует переопределять метод __init__()
     #     super().__init__()               # https://djbook.ru/rel1.8/ref/models/instances.html

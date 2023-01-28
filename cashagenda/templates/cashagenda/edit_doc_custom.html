@@ -51,6 +51,13 @@
         {{ form.currency.label_tag }}
         {{ form.currency }}
     </div>
+    {% if form.sum_in %}
+    <div class="fieldWrapper">
+        {{ form.sum_in.errors }}
+        {{ form.sum_in.label_tag }}
+        {{ form.sum_in }}
+    </div>
+    {% endif %}
     {% if form.currency_in %}
     <div class="fieldWrapper">
         {{ form.currency_in.errors }}
