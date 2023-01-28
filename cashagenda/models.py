@@ -5,6 +5,7 @@ import django.utils.timezone
 from django.core.exceptions import ValidationError
 from django.urls import reverse, reverse_lazy
 from django.db.models import Sum, Q
+from datetime import datetime
 
 
 class User(AbstractUser):
@@ -20,8 +21,8 @@ class Account(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     
     class Meta():
-        verbose_name = "Счет"
-        verbose_name_plural = "Счета"
+        verbose_name = "Account"
+        verbose_name_plural = "Accounts"
     
     def __str__(self, *args, **kwargs):
         return self.name
@@ -30,11 +31,11 @@ class Currency(models.Model):
     
     name = models.CharField(max_length=50, default="")
     short_name = models.CharField(max_length=3, default="")
-    course = models.DecimalField(decimal_places=4, max_digits=10, verbose_name="Курс", default=0)
+    course = models.DecimalField(decimal_places=4, max_digits=10, verbose_name="Course", default=0)
     
     class Meta():
-        verbose_name = "Валюта"
-        verbose_name_plural = "Валюты"
+        verbose_name = "Currency"
+        verbose_name_plural = "Currencies"
     
     def __str__(self, *args, **kwargs):
         return self.name
@@ -46,8 +47,8 @@ class Budget(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     
     class Meta():
-        verbose_name = "Статья"
-        verbose_name_plural = "Статьи"
+        verbose_name = "Budget"
+        verbose_name_plural = "Budgets"
     
     def __str__(self, *args, **kwargs):
         return self.name
@@ -55,7 +56,7 @@ class Budget(models.Model):
 
 class Document(models.Model):
 
-    date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
+    date     = models.DateTimeField(verbose_name="Date", default=django.utils.timezone.now)
     # currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     # number = models.AutoField(primary_key=False)
     account  = models.ForeignKey(Account, on_delete=models.PROTECT, verbose_name="Account")
@@ -264,7 +265,7 @@ class CurrencyExchange(Document):
 class BalanceRecord(models.Model):
     
     @classmethod
-    def get_balance_after(cls, doc, acc, curr):
+    def get_balance_undo(cls, doc, acc, curr):
         if not acc or not curr:
             return None
         if doc:
@@ -272,10 +273,14 @@ class BalanceRecord(models.Model):
             return cls.objects.filter(Q(account = acc), Q(currency = curr), 
                                       Q(date__lt = doc.date) | Q(date = doc.date) & Q(pk__lt = doc.pk)
                                       ).aggregate(sum = Sum("sum"))["sum"]
+        elif isinstance(doc, datetime):
+            return cls.objects.filter(Q(account = acc), Q(currency = curr), 
+                                      Q(date__lt = doc)
+                                      ).aggregate(sum = Sum("sum"))["sum"]
         else:
             return cls.objects.filter(account = acc, currency = curr).aggregate(sum = Sum("sum"))["sum"]
     
-    date     = models.DateTimeField(verbose_name="Дата", default=django.utils.timezone.now)
+    date     = models.DateTimeField(verbose_name="Date", default=django.utils.timezone.now)
     sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Currency", default=1)
     balance  = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Balance", default=0)
