@@ -272,24 +272,20 @@ class BalanceRecord(models.Model):
             return None
         
         # it worked if doc not saved and document.date <> date_doc
-        if isinstance(doc, Document) and isinstance(date_doc, datetime): 
+        if date:
             # return cls.objects.filter(account = acc, currency = curr, date__lte = doc.date).aggregate(sum = models.Sum("sum"))["sum"]
-            return cls.objects.filter(Q(account = acc), Q(currency = currency), 
-                                      Q(date__lt = doc.date) | Q(date = date_doc) & Q(document__pk__lt = doc.pk)
-                                      ).aggregate(sum = Sum("sum"))["sum"]
-         # it worked if doc not filled and position or doc dont have matter
-        elif isinstance(date_doc, datetime):
-            return cls.objects.filter(Q(account = acc), Q(currency = currency), 
-                                      Q(date__lt = date_doc)
-                                      ).aggregate(sum = Sum("sum"))["sum"]
-        # it worked if doc saved and document.date = date_doc
-        if isinstance(doc, Document) and isinstance(date_doc, datetime): 
-            return cls.objects.filter(Q(account = acc), Q(currency = currency), 
-                                      Q(date__lt = doc.date) | Q(date = date_doc) & Q(document__pk__lt = doc.pk)
-                                      ).aggregate(sum = Sum("sum"))["sum"]
+            if document_pk: 
+                return cls.objects.filter(Q(account = account), Q(currency = currency), 
+                                        Q(date__lt = date) | Q(date = date) & Q(document__pk__lt = document_pk)
+                                        ).aggregate(sum = Sum("sum"))["sum"]
+            # it worked if doc not filled and position or doc dont have matter
+            else:
+                return cls.objects.filter(Q(account = account), Q(currency = currency), 
+                                        Q(date__lt = date)
+                                        ).aggregate(sum = Sum("sum"))["sum"]
         # if intend acc and curr only - calculate last value
         else:
-            return cls.objects.filter(account = acc, currency = currency).aggregate(sum = Sum("sum"))["sum"]
+            return cls.objects.filter(account = account, currency = currency).aggregate(sum = Sum("sum"))["sum"]
     
     date     = models.DateTimeField(verbose_name="Date", default=django.utils.timezone.now)
     sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)
