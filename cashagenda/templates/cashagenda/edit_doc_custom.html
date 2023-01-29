@@ -87,7 +87,39 @@
     <a class="btn btn-lg btn-outline-danger" href="{% url 'cashagenda_journals' %}">Escape</a>
 </form>
 
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    /*
+    On focus out on input nickname,
+    call AJAX get request to check if the nickName
+    already exists or not.
+    */
+    $("#id_sum").focusout(function (e) {
+        e.preventDefault();
+        // get the nickname
+        var nick_name = $(this).val();
+        // GET AJAX request
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'cashagenda_ajax_getbalance'  %}",
+            data: {"nick_name": nick_name},
+            success: function (response) {
+                // if not valid user, alert the user
+                if(!response["valid"]){
+                    alert("You cannot create a friend with same nick name");
+                    var nickName = $("#id_nick_name");
+                    nickName.val("")
+                    nickName.focus()
+                }
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        })
+    })
+</script>
+{% endblock javascripts %}

@@ -11,7 +11,8 @@ from django.db.models import Sum
 from .utils import getAccountCurrencyCrossTable
 from django.views.generic import DetailView
 from .utils import get_page_context, get_aware_datetime
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
+import json
 
 
 # Create your views here.
@@ -93,24 +94,38 @@ def example_form(request):
     return HttpResponse(html_template.render(context, request))
 
 def get_ajax_account_balance(request):
-    
+    # request.is_ajax() is deprecated since django 3.1
+    # https://testdriven.io/blog/django-ajax-xhr/
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if is_ajax:
+        if request.method == 'POST':
+            data = json.load(request)
+            doc = data.get('payload')
+            # Todo.objects.create(task=todo['task'], completed=todo['completed'])
+            balance = BalanceRecord.get_balance_undo(doc['acc_id'], doc['cur_id'],
+                get_aware_datetime(doc['date_str']) if doc['date_str'] else None, doc['doc_id'] if doc['doc_id'] else None)
+            return JsonResponse({'balance': balance})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+    else:
+        return HttpResponseBadRequest('Invalid request')
     # request should be ajax and method should be GET.
-    if request.is_ajax and request.method == "GET":
-        # get the data from the client side.
-        doc_id   = request.GET.get("doc_id", None)
-        acc_id   = request.GET.get("acc_id", None)
-        cur_id   = request.GET.get("cur_id", None)
-        date_str = request.GET.get("date", None)
+    # if request.is_ajax and request.method == "POST":
+    #     # get the data from the client side.
+    #     doc_id   = request.GET.get("doc_id", None)
+    #     acc_id   = request.GET.get("acc_id", None)
+    #     cur_id   = request.GET.get("cur_id", None)
+    #     date_str = request.GET.get("date", None)
         
-        if not acc_id or not cur_id:
-            return JsonResponse({}, status = 400)
+    #     if not acc_id or not cur_id:
+    #         return JsonResponse({}, status = 400)
         
-        balance = BalanceRecord.get_balance_undo(acc_id, cur_id,
-            get_aware_datetime(date_str) if date_str else None, doc_id if doc_id else None)
+    #     balance = BalanceRecord.get_balance_undo(acc_id, cur_id,
+    #         get_aware_datetime(date_str) if date_str else None, doc_id if doc_id else None)
 
-        return JsonResponse({"balance":balance}, status = 200)
+    #     return JsonResponse({"balance":balance}, status = 200)
 
-    return JsonResponse({}, status = 400)
+    # return JsonResponse({}, status = 400)
 
 class DocumentCreateCommon:
     success_url = reverse_lazy("cashagenda_journals")
