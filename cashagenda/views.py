@@ -93,12 +93,13 @@ def example_form(request):
     return HttpResponse(html_template.render(context, request))
 
 def get_ajax_account_balance(request):
-    # request should be ajax and method should be POST.
-    if request.is_ajax and request.method == "POST":
+    
+    # request should be ajax and method should be GET.
+    if request.is_ajax and request.method == "GET":
         # get the data from the client side.
-        doc_id = request.GET.get("doc_id", None)
-        acc_id = request.GET.get("acc_id", None)
-        cur_id = request.GET.get("cur_id", None)
+        doc_id   = request.GET.get("doc_id", None)
+        acc_id   = request.GET.get("acc_id", None)
+        cur_id   = request.GET.get("cur_id", None)
         date_str = request.GET.get("date", None)
         
         if not acc_id or not cur_id:
@@ -107,13 +108,7 @@ def get_ajax_account_balance(request):
         balance = BalanceRecord.get_balance_undo(acc_id, cur_id,
             get_aware_datetime(date_str) if date_str else None, doc_id if doc_id else None)
 
-            
-        if BalanceRecord.objects.filter(nick_name = nick_name).exists():
-            # if nick_name found return not valid new friend
-            return JsonResponse({"valid":False}, status = 200)
-        else:
-            # if nick_name not found, then user can create a new friend.
-            return JsonResponse({"valid":True}, status = 200)
+        return JsonResponse({"balance":balance}, status = 200)
 
     return JsonResponse({}, status = 400)
 
