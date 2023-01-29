@@ -265,27 +265,27 @@ class CurrencyExchange(Document):
 class BalanceRecord(models.Model):
     
     @classmethod
-    def get_balance_undo(cls, account, currency, date, document_pk):
+    def get_balance_undo(cls, account_pk, currency_pk, date, document_pk):
         
         # most be filled, else its dont have matter
-        if not account or not currency:
+        if not account_pk or not currency_pk:
             return None
         
         # it worked if doc not saved and document.date <> date_doc
         if date:
             # return cls.objects.filter(account = acc, currency = curr, date__lte = doc.date).aggregate(sum = models.Sum("sum"))["sum"]
             if document_pk: 
-                return cls.objects.filter(Q(account = account), Q(currency = currency), 
+                return cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
                                         Q(date__lt = date) | Q(date = date) & Q(document__pk__lt = document_pk)
                                         ).aggregate(sum = Sum("sum"))["sum"]
             # it worked if doc not filled and position or doc dont have matter
             else:
-                return cls.objects.filter(Q(account = account), Q(currency = currency), 
+                return cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
                                         Q(date__lt = date)
                                         ).aggregate(sum = Sum("sum"))["sum"]
         # if intend acc and curr only - calculate last value
         else:
-            return cls.objects.filter(account = account, currency = currency).aggregate(sum = Sum("sum"))["sum"]
+            return cls.objects.filter(account__pk = account_pk, currency__pk = currency_pk).aggregate(sum = Sum("sum"))["sum"]
     
     date     = models.DateTimeField(verbose_name="Date", default=django.utils.timezone.now)
     sum      = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Sum", default=0)

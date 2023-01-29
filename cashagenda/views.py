@@ -104,14 +104,9 @@ def get_ajax_account_balance(request):
         if not acc_id or not cur_id:
             return JsonResponse({}, status = 400)
         
-        acc = Account.objects.get(pk=acc_id)
-        cur = Currency.objects.get(pk=cur_id)
-        
-        if doc_id:
-            doc = Document.objects.get(pk=doc_id)
+        balance = BalanceRecord.get_balance_undo(acc_id, cur_id,
+            get_aware_datetime(date_str) if date_str else None, doc_id if doc_id else None)
 
-        if date_str:
-            date_str =  
             
         if BalanceRecord.objects.filter(nick_name = nick_name).exists():
             # if nick_name found return not valid new friend
