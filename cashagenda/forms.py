@@ -14,7 +14,7 @@ class CostProfitMetaTemplate:
         widgets = {
             'date': MinimalSplitDateTimeMultiWidget(attrs={   #forms.DateTimeInput
                 'class': 'form-control datepicker-input', 
-                'placeholder': 'YYYY-MM-DD hh:mm:ss',
+                # 'placeholder': 'YYYY-MM-DD hh:mm:ss',
                 'required': 'required'}),
             'account': forms.Select(attrs={
                 'class': 'form-select', 

@@ -8,7 +8,7 @@ from .models import *
 from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
-from .utils import getAccountCurrencyCrossTable
+# from .utils import getAccountCurrencyCrossTable
 from django.views.generic import DetailView
 from .utils import get_page_context, get_aware_datetime
 from django.http import JsonResponse, HttpResponseBadRequest

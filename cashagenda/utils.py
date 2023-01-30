@@ -1,8 +1,8 @@
-from .models import BalanceRecord
 from django.db.models.functions import Cast
 from django.db.models import Sum, F
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import is_aware, make_aware
+from .models import BalanceRecord
 
 svg_paths = {
     "round_diagramm" : r'<path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>',
@@ -15,9 +15,12 @@ svg_paths = {
 
 def get_aware_datetime(date_str):
     ret = parse_datetime(date_str)
-    if not is_aware(ret):
-        ret = make_aware(ret)
-    return ret
+    return ensure_aware(ret)
+
+def ensure_aware(date_time):
+    if not is_aware(date_time):
+        date_time = make_aware(date_time)
+    return date_time
 
 def get_page_context(active_page):
     
@@ -148,67 +151,67 @@ def get_page_context(active_page):
         context["variant"] = "edit"
         context["page_title"] = "Update currencyexchange"
     elif active_page == "dashboard":
-        context["acc_cur_cross_table"] = getAccountCurrencyCrossTable()
+        context["acc_cur_cross_table"] = BalanceRecord.getAccountCurrencyCrossTable()
     
     return context
 
-def getAccountCurrencyCrossTable():
+# def getAccountCurrencyCrossTable():
     
-    accounts = {}
-    currencies = {}
-    аverage_balance = 0
-    basis_for_persent = 0
+#     accounts = {}
+#     currencies = {}
+#     аverage_balance = 0
+#     basis_for_persent = 0
     
-    dataQS = BalanceRecord.objects.values("account", "account__name", "currency", "currency__name", "currency__course").annotate(
-        cur_sum=Sum("sum"), bal_sum=Sum(F("currency__course")*F("sum")))
+#     dataQS = BalanceRecord.objects.values("account", "account__name", "currency", "currency__name", "currency__course").annotate(
+#         cur_sum=Sum("sum"), bal_sum=Sum(F("currency__course")*F("sum")))
     
     
-    for record in dataQS:
+#     for record in dataQS:
         
-        if not accounts.get(record["account"]):
-            accounts[record["account"]] = {}
+#         if not accounts.get(record["account"]):
+#             accounts[record["account"]] = {}
             
-        accounts[record["account"]]["account"] = record["account"]
-        accounts[record["account"]]["name"] = record["account__name"]
-        accounts[record["account"]][record["currency"]] = {"cur_sum": record["cur_sum"], "bal_sum": record["bal_sum"]}
-        accounts[record["account"]]["acc_sum"] =  accounts[record["account"]].get("acc_sum", 0) + record["bal_sum"] 
+#         accounts[record["account"]]["account"] = record["account"]
+#         accounts[record["account"]]["name"] = record["account__name"]
+#         accounts[record["account"]][record["currency"]] = {"cur_sum": record["cur_sum"], "bal_sum": record["bal_sum"]}
+#         accounts[record["account"]]["acc_sum"] =  accounts[record["account"]].get("acc_sum", 0) + record["bal_sum"] 
         
-        if not currencies.get(record["currency"]):
-            currencies[record["currency"]] = {}
+#         if not currencies.get(record["currency"]):
+#             currencies[record["currency"]] = {}
             
-        currencies[record["currency"]]["currency"] = record["currency"]
-        currencies[record["currency"]]["name"] = record["currency__name"]
-        currencies[record["currency"]]["course"] = record["currency__course"]
-        currencies[record["currency"]]["cur_sum"] =  currencies[record["currency"]].get("cur_sum", 0) + record["cur_sum"]
-        currencies[record["currency"]]["bal_sum"] =  currencies[record["currency"]].get("bal_sum", 0) + record["bal_sum"]
+#         currencies[record["currency"]]["currency"] = record["currency"]
+#         currencies[record["currency"]]["name"] = record["currency__name"]
+#         currencies[record["currency"]]["course"] = record["currency__course"]
+#         currencies[record["currency"]]["cur_sum"] =  currencies[record["currency"]].get("cur_sum", 0) + record["cur_sum"]
+#         currencies[record["currency"]]["bal_sum"] =  currencies[record["currency"]].get("bal_sum", 0) + record["bal_sum"]
         
-        аverage_balance += record["bal_sum"]
-        basis_for_persent = basis_for_persent + record["bal_sum"] if record["bal_sum"] > 0 else 0
+#         аverage_balance += record["bal_sum"]
+#         basis_for_persent = basis_for_persent + record["bal_sum"] if record["bal_sum"] > 0 else 0
     
-    cur_arr = sorted(currencies.values(), key=lambda cur: cur["course"])
-    acc_arr = sorted(accounts.values(), key=lambda acc: -acc["acc_sum"])
+#     cur_arr = sorted(currencies.values(), key=lambda cur: cur["course"])
+#     acc_arr = sorted(accounts.values(), key=lambda acc: -acc["acc_sum"])
     
-    for cur in cur_arr:
-        cur["percent"] = 0        
-        if cur["bal_sum"] > 0 and basis_for_persent > 0:
-            cur["percent"] = round(100 * cur["bal_sum"] / basis_for_persent, 2)
+#     for cur in cur_arr:
+#         cur["percent"] = 0        
+#         if cur["bal_sum"] > 0 and basis_for_persent > 0:
+#             cur["percent"] = round(100 * cur["bal_sum"] / basis_for_persent, 2)
     
-    for acc in acc_arr:
-        acc["currency_sums"] = []
-        for cur in cur_arr:
-            if acc.get(cur["currency"]):
-                sum = acc[cur["currency"]]["cur_sum"]
-                bal_sum = acc[cur["currency"]]["bal_sum"]
-                if cur["course"] > 1:
-                    acc["currency_sums"].append({"bal_sum": bal_sum, "sum_view":f"{sum:.2f} ({bal_sum:.2f})"})
-                else:
-                    acc["currency_sums"].append({"bal_sum": bal_sum, "sum_view":f"{sum:.2f}"})
-            else:
-                acc["currency_sums"].append({"bal_sum": 0, "sum_view":"-"})
+#     for acc in acc_arr:
+#         acc["currency_sums"] = []
+#         for cur in cur_arr:
+#             if acc.get(cur["currency"]):
+#                 sum = acc[cur["currency"]]["cur_sum"]
+#                 bal_sum = acc[cur["currency"]]["bal_sum"]
+#                 if cur["course"] > 1:
+#                     acc["currency_sums"].append({"bal_sum": bal_sum, "sum_view":f"{sum:.2f} ({bal_sum:.2f})"})
+#                 else:
+#                     acc["currency_sums"].append({"bal_sum": bal_sum, "sum_view":f"{sum:.2f}"})
+#             else:
+#                 acc["currency_sums"].append({"bal_sum": 0, "sum_view":"-"})
         
-        acc["percent"] = 0        
-        if acc["acc_sum"] > 0 and basis_for_persent > 0:
-            acc["percent"] = round(100 * acc["acc_sum"] / basis_for_persent, 2) 
+#         acc["percent"] = 0        
+#         if acc["acc_sum"] > 0 and basis_for_persent > 0:
+#             acc["percent"] = round(100 * acc["acc_sum"] / basis_for_persent, 2) 
     
     
-    return {"accounts": acc_arr, "currencies": cur_arr, "balance": аverage_balance}
+#     return {"accounts": acc_arr, "currencies": cur_arr, "balance": аverage_balance}

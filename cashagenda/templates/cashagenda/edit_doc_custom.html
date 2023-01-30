@@ -111,8 +111,8 @@
         }
         return cookieValue;
     }
-
-    $("#id_sum").focusout(function (e) {
+    // focusout
+    $("#id_sum").change(function (e) {
         e.preventDefault();
         $.ajax({
             url: "{% url 'cashagenda_ajax_getbalance' %}",
@@ -120,8 +120,8 @@
             dataType: "json",
             data: JSON.stringify({payload: {"acc_id": $("#id_account").val(),
                                             "cur_id": $("#id_currency").val(),
-                                            "date_str": "",
-                                            "doc_id": ""},}),
+                                            "date_str": $("#id_date_0").val() + " " + $("#id_date_1").val(),
+                                            "doc_id": "{{ object.pk }}" },}),
             headers: {
             "X-Requested-With": "XMLHttpRequest",
             "X-CSRFToken": getCookie("csrftoken"),  // don't forget to include the 'getCookie' function
