@@ -67,7 +67,7 @@ class Document(models.Model):
     photo    = models.ImageField(upload_to='photos/%Y/%m/', blank=True)
     # posted   = models.BooleanField(default=False)
     def __str__(self):
-        return "{0} №{1} от {2}".format(self._meta.verbose_name, self.id, self.date.strftime("%d.%m.%Y %H:%M"))
+        return "{0} №{1} от {2}".format(self._meta.verbose_name, self.id, self.date.astimezone().strftime("%d.%m.%Y %H:%M"))
     
     def __cmp__(self, other):
         if self.date < other.date or (self.date == other.date and self.pk < other.pk):
@@ -275,15 +275,17 @@ class BalanceRecord(models.Model):
         # it worked if doc not saved and document.date <> date_doc
         if date:
             # return cls.objects.filter(account = acc, currency = curr, date__lte = doc.date).aggregate(sum = models.Sum("sum"))["sum"]
-            if document_pk: 
-                return cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
+            if document_pk:
+                sum = cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
                                         Q(date__lt = date) | Q(date = date) & Q(document__pk__lt = document_pk)
-                                        ).aggregate(sum = Sum("sum"))["sum"]
+                                        ).aggregate(sum = Sum("sum"))["sum"] 
+                return sum if sum else 0
             # it worked if doc not filled and position or doc dont have matter
             else:
-                return cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
+                sum = cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
                                         Q(date__lt = date)
                                         ).aggregate(sum = Sum("sum"))["sum"]
+                return sum if sum else 0 
         # if intend acc and curr only - calculate last value
         else:
             return cls.objects.filter(account__pk = account_pk, currency__pk = currency_pk).aggregate(sum = Sum("sum"))["sum"]
