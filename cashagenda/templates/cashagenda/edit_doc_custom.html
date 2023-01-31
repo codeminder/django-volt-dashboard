@@ -6,8 +6,13 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
+<div class="row">
+    <div class="col-12 col-xl-8">
+        <div class="card card-body border-0 shadow mb-4">
+
 {% if variant == "edit" %}
-<h2> {{ object }} </h2>
+<h2 class="h5 mb-4"> {{ object }} </h2>
 
 <form action="{% url form_action object.pk %}" method="post" enctype="multipart/form-data">
 {% elif variant == "new" %}
@@ -17,65 +22,71 @@
 {% endif %}
     {% csrf_token %}
     {{ form.non_field_errors }}
-    <div class="fieldWrapper">
-        {{ form.date.errors }}
-        {{ form.date.label_tag }}
-        {{ form.date }}
+    <div class="row">
+        <div class="col-sm-4 mb-3">
+            {{ form.sum.errors }}
+            {{ form.sum.label_tag }}
+            {{ form.sum }}
+        </div>
+        {% if form.sum_diff %}
+        <div class="col-sm-4 mb-3">
+            {{ form.sum_diff.errors }}
+            {{ form.sum_diff.label_tag }}
+            {{ form.sum_diff }}
+        </div>
+        {% endif %}
+        <div class="col-sm-4 mb-3">
+            {{ form.currency.errors }}
+            {{ form.currency.label_tag }}
+            {{ form.currency }}
+        </div>
     </div>
-    <div class="fieldWrapper">
-        {{ form.account.errors }}
-        {{ form.account.label_tag }}
-        {{ form.account }}
+    <div class="row">
+        {% if form.sum_in %}
+        <div class="col-sm-4 mb-3">
+            {{ form.sum_in.errors }}
+            {{ form.sum_in.label_tag }}
+            {{ form.sum_in }}
+        </div>
+        {% endif %}
+        {% if form.currency_in %}
+        <div class="col-sm-4 mb-3">
+            {{ form.currency_in.errors }}
+            {{ form.currency_in.label_tag }}
+            {{ form.currency_in }}
+        </div>
+        {% endif %}
     </div>
-    {% if form.account_in %}
-    <div class="fieldWrapper">
-        {{ form.account_in.errors }}
-        {{ form.account_in.label_tag }}
-        {{ form.account_in }}
+    <div class="row">
+        <div class="col-sm-4 mb-3">
+            {{ form.account.errors }}
+            {{ form.account.label_tag }}
+            {{ form.account }}
+        </div>
+        {% if form.account_in %}
+        <div class="col-sm-4 mb-3">
+            {{ form.account_in.errors }}
+            {{ form.account_in.label_tag }}
+            {{ form.account_in }}
+        </div>
+        {% endif %}
+        {% if form.budget %}
+        <div class="col-sm-4 mb-3">
+            {{ form.budget.errors }}
+            {{ form.budget.label_tag }}
+            {{ form.budget }}
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-    <div class="fieldWrapper">
-        {{ form.sum.errors }}
-        {{ form.sum.label_tag }}
-        {{ form.sum }}
-    </div>
-    {% if form.sum_diff %}
-    <div class="fieldWrapper">
-        {{ form.sum_diff.errors }}
-        {{ form.sum_diff.label_tag }}
-        {{ form.sum_diff }}
-    </div>
-    {% endif %}
-    <div class="fieldWrapper">
-        {{ form.currency.errors }}
-        {{ form.currency.label_tag }}
-        {{ form.currency }}
-    </div>
-    {% if form.sum_in %}
-    <div class="fieldWrapper">
-        {{ form.sum_in.errors }}
-        {{ form.sum_in.label_tag }}
-        {{ form.sum_in }}
-    </div>
-    {% endif %}
-    {% if form.currency_in %}
-    <div class="fieldWrapper">
-        {{ form.currency_in.errors }}
-        {{ form.currency_in.label_tag }}
-        {{ form.currency_in }}
-    </div>
-    {% endif %}
-    {% if form.budget %}
-    <div class="fieldWrapper">
-        {{ form.budget.errors }}
-        {{ form.budget.label_tag }}
-        {{ form.budget }}
-    </div>
-    {% endif %}
     <div class="fieldWrapper">
         {{ form.comment.errors }}
         {{ form.comment.label_tag }}
         {{ form.comment }}
+    </div>
+    <div class="row">
+        {{ form.date.errors }}
+        {{ form.date.label_tag }}
+        {{ form.date }}
     </div>
     <div class="fieldWrapper">
         {{ form.photo.errors }}
@@ -87,6 +98,9 @@
     <a class="btn btn-lg btn-outline-danger" href="{% url 'cashagenda_journals' %}">Escape</a>
 </form>
 
+</div>
+</div>
+</div>
 
 {% endblock content %}
 

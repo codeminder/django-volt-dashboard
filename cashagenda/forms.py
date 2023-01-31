@@ -3,10 +3,10 @@ from .models import *
 
 from .widget import DatePickerInput, TimePickerInput, DateTimePickerInput, MinimalSplitDateTimeMultiWidget
 
-class ExampleForm(forms.Form):
-        my_date_field = forms.DateField(widget=DatePickerInput)
-        my_time_field = forms.TimeField(widget=TimePickerInput)
-        my_date_time_field = forms.DateTimeField(widget=DateTimePickerInput)
+# class ExampleForm(forms.Form):
+#         my_date_field = forms.DateField(widget=DatePickerInput)
+#         my_time_field = forms.TimeField(widget=TimePickerInput)
+#         my_date_time_field = forms.DateTimeField(widget=DateTimePickerInput)
 
 class CostProfitMetaTemplate:
         # fields = '__all__'
@@ -29,7 +29,7 @@ class CostProfitMetaTemplate:
             'sum_diff': forms.NumberInput({
                 'class': 'form-control', 
                 'required': 'required',
-                'step': '0.01'}),
+                'readonly': 'readonly'}),
             'sum_in': forms.NumberInput({
                 'class': 'form-control', 
                 'required': 'required',

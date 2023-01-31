@@ -15,6 +15,8 @@ class DateTimePickerInput(forms.DateTimeInput):
 # Thanks to https://gist.github.com/andytwoods/76f18f5ddeba9192d51dccc922086e43 
 class MinimalSplitDateTimeMultiWidget(MultiWidget):
 
+    template_name = 'cashagenda\widgets\multiwidget.html'
+    
     def __init__(self, widgets=None, attrs=None):
         if widgets is None:
             if attrs is None:
