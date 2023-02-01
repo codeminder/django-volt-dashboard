@@ -97,10 +97,18 @@ class Document(models.Model):
     #         raise Exception
     
     def clean(self):
-        # Don't allow draft entries to have a pub_date.
-        # if self == 'draft' and self is not None:
-        raise ValidationError('That document saving is restricted')
-        # Set the pub_date for published items if it hasn't been set already.
+        #  this Document without inheritance dont matter
+        if not (type(self) is Cost
+            or type(self) is Profit
+            or type(self) is Transfer
+            or type(self) is Inventory
+            or type(self) is CurrencyExchange):
+            raise ValidationError('That document saving is restricted')
+        
+        # Don't allow dates older than Linux .
+        if self.date.timestamp() < 0:
+            raise ValidationError({'date': "Тhe date must be afrer than beginning of the UNIX epoch"})
+        
     
     def get_my_model_name(self):
         return self._meta.model_name
@@ -135,8 +143,8 @@ class Profit(Document):
         # fields = ('date', 'sum_in', 'currency', 'account_in', 'comment')
         
     def clean(self):
-        # return super().clean()
-        pass
+        return super().clean()
+        # pass
     
 
 
@@ -164,8 +172,8 @@ class Cost(Document):
         # fields = ('date', 'sum_out', 'currency', 'account_out', 'comment')
     
     def clean(self):
-            # return super().clean()
-        pass
+        return super().clean()
+        # pass
     
 
 
@@ -196,8 +204,8 @@ class Transfer(Document):
         verbose_name_plural = "Transfers"
     
     def clean(self):
-            # return super().clean()
-        pass
+        return super().clean()
+        # pass
     
 
 
@@ -226,8 +234,8 @@ class Inventory(Document):
         verbose_name_plural = "Inventories"
     
     def clean(self):
-            # return super().clean()
-        pass
+        return super().clean()
+        # pass
     
 
 
@@ -259,8 +267,8 @@ class CurrencyExchange(Document):
         verbose_name_plural = "Currency exchanges"
     
     def clean(self):
-            # return super().clean()
-        pass
+        return super().clean()
+        # pass
         
         
 class BalanceRecord(models.Model):

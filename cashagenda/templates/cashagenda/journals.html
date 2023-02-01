@@ -90,6 +90,36 @@
     </table>
 </div>
 
+<div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination mb-0">
+        {% if  page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        {% for p in paginator.page_range %}
+        {% if page_obj.number == p %}
+        <li class="page-item active">
+            <div class="page-link">{{ p }} </div>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if  page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+        </ul>
+    </nav>
+    {% comment %} <div class="fw-normal small mt-4 mt-lg-0">Showing <b>{{page_obj.number}}</b> out of <b>{{paginator.count}}</b> entries</div> {% endcomment %}
+</div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->

@@ -41,26 +41,29 @@ def budgets(request):
     html_template = loader.get_template('cashagenda/budgets.html')
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
-def journals(request):
+# @login_required(login_url="/login/")
+# def journals(request):
     
-    context = get_page_context("journals")
-    docs = Document.objects.all().select_related("profit", "cost", "transfer", "inventory", 
-                                                 "currencyexchange", "currency", "account", 
-                                                 "cost__budget", "profit__budget", "inventory__budget",
-                                                 "transfer__account_in", 
-                                                 "currencyexchange__currency_in", 
-                                                #  "currencyexchange__sum_in",
-                                                #  "inventory__sum_diff"
-                                                 ).order_by("-date", "-pk")
-    # for doc in docs:
-    #     print(doc)
-    context["docs"] = docs
+#     context = get_page_context("journals")
+#     docs = Document.objects.all().select_related("profit", "cost", "transfer", "inventory", 
+#                                                  "currencyexchange", "currency", "account", 
+#                                                  "cost__budget", "profit__budget", "inventory__budget",
+#                                                  "transfer__account_in", 
+#                                                  "currencyexchange__currency_in", 
+#                                                 #  "currencyexchange__sum_in",
+#                                                 #  "inventory__sum_diff"
+#                                                  ).order_by("-date", "-pk")
+#     # for doc in docs:
+#     #     print(doc)
+#     context["docs"] = docs
 
-    html_template = loader.get_template('cashagenda/journals.html')
-    return HttpResponse(html_template.render(context, request))
+#     html_template = loader.get_template('cashagenda/journals.html')
+#     return HttpResponse(html_template.render(context, request))
 
 class JournalView(LoginRequiredMixin, ListView):
+    
+    paginate_by = 5
+    
     model = Document
     template_name = 'cashagenda/journals.html'
     context_object_name = "docs"

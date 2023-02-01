@@ -9,46 +9,46 @@ from .widget import DatePickerInput, TimePickerInput, DateTimePickerInput, Minim
 #         my_date_time_field = forms.DateTimeField(widget=DateTimePickerInput)
 
 class CostProfitMetaTemplate:
-        # fields = '__all__'
-        fields = ('date', 'account', 'sum', 'currency', 'comment', 'budget', 'photo',)
-        widgets = {
-            'date': MinimalSplitDateTimeMultiWidget(attrs={   #forms.DateTimeInput
-                'class': 'form-control datepicker-input', 
-                # 'placeholder': 'YYYY-MM-DD hh:mm:ss',
-                'required': 'required'}),
-            'account': forms.Select(attrs={
-                'class': 'form-select', 
-                'required': 'required'}),
-            'account_in': forms.Select(attrs={
-                'class': 'form-select', 
-                'required': 'required'}),
-            'sum': forms.NumberInput({
-                'class': 'form-control', 
-                'required': 'required',
-                'step': '0.01'}),
-            'sum_diff': forms.NumberInput({
-                'class': 'form-control', 
-                'required': 'required',
-                'readonly': 'readonly'}),
-            'sum_in': forms.NumberInput({
-                'class': 'form-control', 
-                'required': 'required',
-                'step': '0.01'}), 
-            'currency': forms.Select(attrs={
-                'class': 'form-select', 
-                'required': 'required'}),
-            'currency_in': forms.Select(attrs={
-                'class': 'form-select', 
-                'required': 'required'}),
-            'comment': forms.Textarea({
-                'class': 'form-control'
-                }),
-            'budget': forms.Select(attrs={
-                'class': 'form-select', 
-                'required': 'required'}),
-            'photo': forms.FileInput(attrs={
-                'class': 'form-control'}),
-        }
+    # fields = '__all__'
+    fields = ('date', 'account', 'sum', 'currency', 'comment', 'budget', 'photo',)
+    widgets = {
+        'date': MinimalSplitDateTimeMultiWidget(attrs={   #forms.DateTimeInput
+            'class': 'form-control datepicker-input', 
+            # 'placeholder': 'YYYY-MM-DD hh:mm:ss',
+            'required': 'required'}),
+        'account': forms.Select(attrs={
+            'class': 'form-select', 
+            'required': 'required'}),
+        'account_in': forms.Select(attrs={
+            'class': 'form-select', 
+            'required': 'required'}),
+        'sum': forms.NumberInput({
+            'class': 'form-control', 
+            'required': 'required',
+            'step': '0.01'}),
+        'sum_diff': forms.NumberInput({
+            'class': 'form-control', 
+            'required': 'required',
+            'readonly': 'readonly'}),
+        'sum_in': forms.NumberInput({
+            'class': 'form-control', 
+            'required': 'required',
+            'step': '0.01'}), 
+        'currency': forms.Select(attrs={
+            'class': 'form-select', 
+            'required': 'required'}),
+        'currency_in': forms.Select(attrs={
+            'class': 'form-select', 
+            'required': 'required'}),
+        'comment': forms.Textarea({
+            'class': 'form-control'
+            }),
+        'budget': forms.Select(attrs={
+            'class': 'form-select', 
+            'required': 'required'}),
+        'photo': forms.FileInput(attrs={
+            'class': 'form-control'}),
+    }
 
 class CreateCostForm(forms.ModelForm):
     class Meta(CostProfitMetaTemplate):

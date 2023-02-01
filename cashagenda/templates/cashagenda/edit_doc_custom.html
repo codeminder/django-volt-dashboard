@@ -21,7 +21,11 @@
 <form action="{% url form_action %}" method="post" enctype="multipart/form-data">
 {% endif %}
     {% csrf_token %}
-    {{ form.non_field_errors }}
+    <ul>
+    {% for non_field_error in form.non_field_errors %}
+    <li class="text-danger"><p class="text-danger mb-0">{{ non_field_error }}</p></li>
+    {% endfor %}
+    </ul>
     <div class="row">
         <div class="col-sm-4 mb-3">
             {{ form.sum.errors }}
