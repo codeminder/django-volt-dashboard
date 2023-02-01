@@ -76,8 +76,8 @@ class Document(models.Model):
             return 1       
         return 0
     
-    # class Meta():
-    #     ordering = ["date"]
+    class Meta():
+        ordering = ["-date", "-id"]
         
     # def post(self):
     #     self.posted = True

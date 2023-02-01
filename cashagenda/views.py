@@ -5,11 +5,11 @@ from django.template import loader
 from django.urls import reverse_lazy
 from .forms import *
 from .models import *
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 # from .utils import getAccountCurrencyCrossTable
-from django.views.generic import DetailView
+# from django.views.generic import DetailView
 from .utils import get_page_context, get_aware_datetime
 from django.http import JsonResponse, HttpResponseBadRequest
 import json
@@ -60,6 +60,24 @@ def journals(request):
     html_template = loader.get_template('cashagenda/journals.html')
     return HttpResponse(html_template.render(context, request))
 
+class JournalView(LoginRequiredMixin, ListView):
+    model = Document
+    template_name = 'cashagenda/journals.html'
+    context_object_name = "docs"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return {**context, **get_page_context("journals")}
+    
+    def get_queryset(self):
+        return Document.objects.all().select_related("profit", "cost", "transfer", "inventory", 
+                                                 "currencyexchange", "currency", "account", 
+                                                 "cost__budget", "profit__budget", "inventory__budget",
+                                                 "transfer__account_in", 
+                                                 "currencyexchange__currency_in", 
+                                                )
+    
+
 # @login_required(login_url="/login/")
 # def add_cost(request):
         
@@ -78,20 +96,20 @@ def journals(request):
 #     html_template = loader.get_template('cashagenda/add_cost.html')
 #     return HttpResponse(html_template.render(context, request))
 
-def example_form(request):
-    context ={}
-    if request.method == "POST":
-        form = ExampleForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("cashagenda_journals")
-    else:
-        form = ExampleForm()
+# def example_form(request):
+#     context ={}
+#     if request.method == "POST":
+#         form = ExampleForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("cashagenda_journals")
+#     else:
+#         form = ExampleForm()
         
-    context["form"] = form
+#     context["form"] = form
     
-    html_template = loader.get_template('cashagenda/example.html')
-    return HttpResponse(html_template.render(context, request))
+#     html_template = loader.get_template('cashagenda/example.html')
+#     return HttpResponse(html_template.render(context, request))
 
 def get_ajax_account_balance(request):
     # request.is_ajax() is deprecated since django 3.1

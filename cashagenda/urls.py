@@ -13,7 +13,8 @@ urlpatterns = [
     path('', views.dashboard, name='cashagenda_home'),
     path('accounts/', views.accounts, name='cashagenda_accounts'),
     path('budgets/', views.budgets, name='cashagenda_budgets'),
-    path('journals/', views.journals, name='cashagenda_journals'),
+    # path('journals/', views.journals, name='cashagenda_journals'),
+    path('journals/', JournalView.as_view(), name='cashagenda_journals'),
     
     # path('add_cost/', AddCostView.as_view(), name='cashagenda_add_cost'),
     # path('add_profit/', AddProfitView.as_view(), name='cashagenda_add_profit'),
