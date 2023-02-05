@@ -67,7 +67,21 @@ class Document(models.Model):
     photo    = models.ImageField(upload_to='photos/%Y/%m/', blank=True)
     # posted   = models.BooleanField(default=False)
     def __str__(self):
-        return "{0} №{1} от {2}".format(self._meta.verbose_name, self.id, self.date.astimezone().strftime("%d.%m.%Y %H:%M"))
+        
+        doc = self
+        
+        if (hasattr(self, "cost")):
+            doc = self.cost
+        elif (hasattr(self, "profit")):
+            doc = self.profit
+        elif (hasattr(self, "transfer")):
+            doc = self.transfer
+        elif (hasattr(self, "inventory")):
+            doc = self.inventory
+        elif (hasattr(self, "currencyexchange")):
+            doc = self.currencyexchange
+        
+        return "{0} №{1} от {2}".format(doc._meta.verbose_name, self.id, self.date.astimezone().strftime("%d.%m.%Y %H:%M"))
     
     def __cmp__(self, other):
         if self.date < other.date or (self.date == other.date and self.pk < other.pk):

@@ -7,7 +7,7 @@ from .forms import *
 from .models import *
 from django.views.generic import CreateView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
+from django.db.models import Sum, OuterRef, Subquery, Func
 # from .utils import getAccountCurrencyCrossTable
 # from django.views.generic import DetailView
 from .utils import get_page_context, get_aware_datetime
@@ -74,11 +74,19 @@ class JournalView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         return Document.objects.all().select_related("profit", "cost", "transfer", "inventory", 
-                                                 "currencyexchange", "currency", "account", 
-                                                 "cost__budget", "profit__budget", "inventory__budget",
-                                                 "transfer__account_in", 
-                                                 "currencyexchange__currency_in", 
-                                                )
+            "currencyexchange", "currency", "account", "cost__budget", "profit__budget", 
+            "inventory__budget", "transfer__account_in", "currencyexchange__currency_in",
+            ).annotate(
+                acc_end_balance = Subquery(BalanceRecord.objects.filter(Q(account = OuterRef("account")) 
+                    & Q(currency = OuterRef("currency")) & (Q(date__lt = OuterRef("date")) | Q(date = OuterRef("date")) 
+                    & Q(document__pk__lte = OuterRef("pk"))), ).values_list(Func("sum", function='SUM',), )), 
+                tran_acc = Subquery(BalanceRecord.objects.filter(Q(account = OuterRef("account")) 
+                    & Q(document__pk = OuterRef("pk")), ).values_list(Func("sum", function='SUM',), )), 
+                acc_end_balance_in = Subquery(BalanceRecord.objects.filter(Q(account = OuterRef("transfer__account_in")) 
+                    & Q(currency = OuterRef("currency")) & (Q(date__lt = OuterRef("date")) | Q(date = OuterRef("date")) 
+                    & Q(document__pk__lte = OuterRef("pk"))), ).values_list(Func("sum", function='SUM',), )), 
+                tran_acc_in = Subquery(BalanceRecord.objects.filter(Q(account = OuterRef("transfer__account_in")) 
+                    & Q(document__pk = OuterRef("pk")), ).values_list(Func("sum", function='SUM',), )), )
     
 
 # @login_required(login_url="/login/")
