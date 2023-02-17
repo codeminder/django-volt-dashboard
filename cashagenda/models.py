@@ -8,7 +8,6 @@ from django.db.models import Sum, Q, F
 from datetime import datetime
 from django.utils.timezone import is_aware, make_aware
 
-
 class User(AbstractUser):
     
     avatar = models.ImageField(upload_to="user_avatars/")
@@ -294,6 +293,7 @@ class BalanceRecord(models.Model):
         if not account_pk or not currency_pk:
             return None
         
+        sum = None
         # it worked if doc not saved and document.date <> date_doc
         if date:
             # return cls.objects.filter(account = acc, currency = curr, date__lte = doc.date).aggregate(sum = models.Sum("sum"))["sum"]
@@ -301,16 +301,17 @@ class BalanceRecord(models.Model):
                 sum = cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
                                         Q(date__lt = date) | Q(date = date) & Q(document__pk__lt = document_pk)
                                         ).aggregate(sum = Sum("sum"))["sum"] 
-                return sum if sum else 0
+                
             # it worked if doc not filled and position or doc dont have matter
             else:
                 sum = cls.objects.filter(Q(account__pk = account_pk), Q(currency__pk = currency_pk), 
                                         Q(date__lt = date)
-                                        ).aggregate(sum = Sum("sum"))["sum"]
-                return sum if sum else 0 
+                                        ).aggregate(sum = Sum("sum"))["sum"] 
         # if intend acc and curr only - calculate last value
         else:
-            return cls.objects.filter(account__pk = account_pk, currency__pk = currency_pk).aggregate(sum = Sum("sum"))["sum"]
+            sum = cls.objects.filter(account__pk = account_pk, currency__pk = currency_pk).aggregate(sum = Sum("sum"))["sum"]
+        
+        return sum if sum else 0
     
     @classmethod    
     def getAccountCurrencyCrossTable(cls):
