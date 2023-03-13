@@ -53,9 +53,9 @@ class CreateDeleteDocumentTest(TestCase):
         test_cost = Cost(account=self.acc1, sum=24.12, currency=self.cur1, comment="comment", budget=self.budget)
         test_cost.save()
         self.assertEqual(Cost.objects.all().count(), 1)
-        self.assertTrue(math.isclose(-24.12, BalanceRecord.get_balance_undo(account_pk=self.acc1.pk, 
-                                                                currency_pk=self.cur1.pk, 
-                                                                date=None, document_pk=None)))
-        # self.assertEqual(-24.12, BalanceRecord.get_balance_undo(account_pk=self.acc1.pk, 
+        # self.assertTrue(math.isclose(-24.12, BalanceRecord.get_balance_undo(account_pk=self.acc1.pk, 
         #                                                         currency_pk=self.cur1.pk, 
-        #                                                         date=None, document_pk=None))
+        #                                                         date=None, document_pk=None)))
+        self.assertEqual(-24.12, BalanceRecord.get_balance_undo(account_pk=self.acc1.pk, 
+                                                                currency_pk=self.cur1.pk, 
+                                                                date=None, document_pk=None))

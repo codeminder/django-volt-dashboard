@@ -1,3 +1,4 @@
+import decimal
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
@@ -7,6 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.db.models import Sum, Q, F
 from datetime import datetime
 from django.utils.timezone import is_aware, make_aware
+
 
 class User(AbstractUser):
     
